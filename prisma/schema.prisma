@@ -9,3 +9,18 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model Issue {
+  id          Int      @id @default(autoincrement()) // Mengatur default value agar auto increment
+  title       String   @db.VarChar(255) // Mengatur agar varchar tidak dibatasi 191 karakter
+  description String   @db.Text
+  status      Status   @default(OPEN) // Mengatur default value menjadi OPEN
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt // Akan berubah seiring kapan data diubah
+}
+
+enum Status {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+}
