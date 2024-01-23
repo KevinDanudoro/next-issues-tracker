@@ -3,7 +3,7 @@
 import "easymde/dist/easymde.min.css";
 import type { FC } from "react";
 import React, { useTransition } from "react";
-import { Button, Text, TextField } from "@radix-ui/themes";
+import { Button, TextField } from "@radix-ui/themes";
 import { Controller, useForm } from "react-hook-form";
 import SimpleMDE from "react-simplemde-editor";
 import axios, { AxiosError } from "axios";
@@ -12,22 +12,24 @@ import { redirect } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createIssueSchema } from "@/schema/validationSchema";
 import { z } from "zod";
+import ErrorMessage from "@/components/ErrorMessage";
+import Spinner from "@/components/Spinner";
 
 type IssueForm = z.infer<typeof createIssueSchema>;
 
 const Page: FC = ({}) => {
+  const { showNotif } = useNotifContext();
   const [, startTransition] = useTransition();
   const {
     register,
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<IssueForm>({
     resolver: zodResolver(createIssueSchema),
   });
-  const { showNotif } = useNotifContext();
 
-  const postNewIssue = async (data: IssueForm) => {
+  const onSubmit = handleSubmit(async (data: IssueForm) => {
     try {
       const req = await axios.post("/api/issues", data);
       if (req.status == 201) {
@@ -39,21 +41,14 @@ const Page: FC = ({}) => {
         showNotif(e.message, "error");
       }
     }
-  };
+  });
 
   return (
-    <form
-      className="max-w-xl space-y-3"
-      onSubmit={handleSubmit((data) => postNewIssue(data))}
-    >
+    <form className="max-w-xl space-y-3" onSubmit={onSubmit}>
       <TextField.Root>
         <TextField.Input placeholder="Title" {...register("title")} />
       </TextField.Root>
-      {errors.title && (
-        <Text color="red" as="p">
-          {errors.title.message}
-        </Text>
-      )}
+      <ErrorMessage>{errors.title?.message}</ErrorMessage>
       <Controller
         name="description"
         control={control}
@@ -61,12 +56,10 @@ const Page: FC = ({}) => {
           <SimpleMDE placeholder="Description" {...field} />
         )}
       />
-      {errors.description && (
-        <Text color="red" as="p">
-          {errors.description.message}
-        </Text>
-      )}
-      <Button>Submit new issue</Button>
+      <ErrorMessage>{errors.description?.message}</ErrorMessage>
+      <Button disabled={isSubmitting}>
+        Submit new issue <Spinner isLoading={isSubmitting} />
+      </Button>
     </form>
   );
 };
