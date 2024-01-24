@@ -1,15 +1,22 @@
 import CredentialsProvider from "next-auth/providers/credentials";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import prisma from "@/prisma/client";
+import { getUserByEmail } from "./db";
+import bcrypt from "bcrypt";
 
 export const authOptions = {
+  adapter: PrismaAdapter(prisma),
   pages: {
     signIn: "/login",
-    signUp: "/register",
+  },
+  session: {
+    strategy: "jwt",
   },
   providers: [
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: {
+        email: {
           label: "Email",
           type: "email",
           placeholder: "lorem@email.com",
@@ -17,18 +24,22 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        // Add logic here to look up the user from the credentials supplied
-        const user = { id: "1", name: "J Smith", email: "jsmith@example.com" };
+        if (!credentials?.email || !credentials?.password) return null;
 
-        if (user) {
-          // Any object returned will be saved in `user` property of the JWT
-          return user;
-        } else {
-          // If you return null then an error will be displayed advising the user to check their details.
-          return null;
+        const existingUser = await getUserByEmail(credentials.email);
+        if (!existingUser) return null;
 
-          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
-        }
+        const passwordMatch = bcrypt.compare(
+          existingUser.password,
+          credentials.password
+        );
+        if (!passwordMatch) return null;
+
+        return {
+          id: existingUser.id.toString(),
+          email: existingUser.email,
+          username: existingUser.username,
+        };
       },
     }),
   ],

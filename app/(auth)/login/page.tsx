@@ -8,8 +8,9 @@ import Link from "next/link";
 import React from "react";
 import type { FC } from "react";
 import { useForm } from "react-hook-form";
-import { FaBug } from "react-icons/fa";
 import { z } from "zod";
+import { signIn } from "next-auth/react";
+import Divider from "../Divider";
 
 interface PageProps {}
 
@@ -24,19 +25,13 @@ const Page: FC<PageProps> = ({}) => {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = handleSubmit((data: LoginForm) => {
-    console.log(data);
+  const onSubmit = handleSubmit(async (data: LoginForm) => {
+    const signInData = await signIn("credentials", data);
+    console.log(signInData);
   });
 
   return (
     <>
-      <div className="bg-gray-100 flex items-center h-12 px-6 justify-between fixed w-full">
-        <FaBug size={20} />
-        <Button>
-          <Link href="/register">Register</Link>
-        </Button>
-      </div>
-
       <div className="w-full h-screen flex justify-center items-center">
         <form
           onSubmit={onSubmit}
@@ -69,12 +64,9 @@ const Page: FC<PageProps> = ({}) => {
             Login
           </Button>
 
-          <div className="relative w-full flex justify-center">
-            <span className="bg-slate-200 z-10 px-4 text-sm">{`don't have an account?`}</span>
-            <span className="absolute block h-[2px] w-full bg-gray-400 rounded-md top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0" />
-          </div>
+          <Divider>{`don't have an account?`}</Divider>
 
-          <Button type="button" className="w-full">
+          <Button variant="surface" type="button" className="w-full">
             <Link href="/register">Register</Link>
           </Button>
         </form>
