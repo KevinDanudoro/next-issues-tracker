@@ -2,6 +2,7 @@ import prisma from "@/prisma/client";
 import { userSchema } from "@/schema/validationSchema";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import { getUserByEmail } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -10,6 +11,11 @@ export async function POST(req: NextRequest) {
   if (!validUser.success) {
     return NextResponse.json(validUser.error.format(), { status: 400 });
   }
+
+  const existingUser = await getUserByEmail(validUser.data.email);
+
+  if (existingUser)
+    return NextResponse.json("Email has already in use", { status: 400 });
 
   const password = await bcrypt.hash(validUser.data.password, 10);
   const newUser = await prisma.user.create({

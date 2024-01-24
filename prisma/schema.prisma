@@ -27,7 +27,7 @@ enum Status {
 
 model User {
   id        Int      @id @default(autoincrement())
-  email     String
+  email     String   @unique
   username  String
   password  String   @db.VarChar(255)
   role      Role     @default(USER)

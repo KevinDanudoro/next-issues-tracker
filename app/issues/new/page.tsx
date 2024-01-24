@@ -10,7 +10,7 @@ import axios, { AxiosError } from "axios";
 import { useNotifContext } from "@/context/NotifContext";
 import { redirect } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createIssueSchema } from "@/schema/validationSchema";
+import { createIssueSchema, userSchema } from "@/schema/validationSchema";
 import { z } from "zod";
 import ErrorMessage from "@/components/ErrorMessage";
 import Spinner from "@/components/Spinner";
