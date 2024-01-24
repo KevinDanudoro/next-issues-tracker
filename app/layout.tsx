@@ -4,8 +4,7 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Navbar from "./Navbar";
-import { Theme } from "@radix-ui/themes";
+import { Theme, ThemePanel } from "@radix-ui/themes";
 import NotifContextProvider from "@/context/NotifContext";
 import Notif from "@/components/Notif";
 
@@ -29,10 +28,9 @@ export default function RootLayout({
     <html lang="en" className={inter.variable}>
       <body>
         <NotifContextProvider>
-          <Theme appearance="light" accentColor="grass">
+          <Theme appearance="light" accentColor="brown">
             <Notif />
-            <Navbar />
-            <main className="p-5">{children}</main>
+            <main>{children}</main>
           </Theme>
         </NotifContextProvider>
       </body>
