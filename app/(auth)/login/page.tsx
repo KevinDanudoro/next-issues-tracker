@@ -1,14 +1,33 @@
 "use client";
 
-import { Button, Separator, TextField } from "@radix-ui/themes";
+import ErrorMessage from "@/components/ErrorMessage";
+import { loginSchema } from "@/schema/validationSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button, TextField } from "@radix-ui/themes";
 import Link from "next/link";
 import React from "react";
 import type { FC } from "react";
+import { useForm } from "react-hook-form";
 import { FaBug } from "react-icons/fa";
+import { z } from "zod";
 
 interface PageProps {}
 
+type LoginForm = z.infer<typeof loginSchema>;
+
 const Page: FC<PageProps> = ({}) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginForm>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = handleSubmit((data: LoginForm) => {
+    console.log(data);
+  });
+
   return (
     <>
       <div className="bg-gray-100 flex items-center h-12 px-6 justify-between fixed w-full">
@@ -19,27 +38,35 @@ const Page: FC<PageProps> = ({}) => {
       </div>
 
       <div className="w-full h-screen flex justify-center items-center">
-        <form className="bg-slate-200 w-[340px] p-8 space-y-4 rounded-md">
+        <form
+          onSubmit={onSubmit}
+          className="bg-slate-200 w-[340px] p-8 space-y-4 rounded-md"
+        >
           <div>
             <label htmlFor="email">Email</label>
             <TextField.Root>
-              <TextField.Input name="email" placeholder="lorem@email.com" />
+              <TextField.Input
+                placeholder="lorem@email.com"
+                {...register("email")}
+              />
             </TextField.Root>
+            <ErrorMessage>{errors.email?.message}</ErrorMessage>
           </div>
 
           <div>
             <label htmlFor="password">Password</label>
             <TextField.Root>
               <TextField.Input
-                name="password"
                 type="password"
                 placeholder="Enter your password"
+                {...register("password")}
               />
             </TextField.Root>
+            <ErrorMessage>{errors.password?.message}</ErrorMessage>
           </div>
 
-          <Button type="submit" className="w-full">
-            Sign In
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            Login
           </Button>
 
           <div className="relative w-full flex justify-center">
@@ -48,7 +75,7 @@ const Page: FC<PageProps> = ({}) => {
           </div>
 
           <Button type="button" className="w-full">
-            <Link href="/register">Sign Up</Link>
+            <Link href="/register">Register</Link>
           </Button>
         </form>
       </div>
