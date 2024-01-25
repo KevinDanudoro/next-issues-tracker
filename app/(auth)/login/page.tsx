@@ -53,7 +53,7 @@ const Page: FC<PageProps> = ({}) => {
           <TextField.Root>
             <TextField.Input
               type="email"
-              placeholder="lorem@email.com"
+              placeholder="Enter your email address"
               {...register("email")}
             />
           </TextField.Root>
