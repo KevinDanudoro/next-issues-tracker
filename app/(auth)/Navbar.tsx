@@ -11,7 +11,7 @@ interface NavbarProps {}
 
 const Navbar: FC<NavbarProps> = ({}) => {
   const pathname = usePathname();
-  console.log({ pathname });
+
   return (
     <div className="bg-gray-100 flex items-center h-12 px-6 justify-between fixed w-full">
       <FaBug size={20} />

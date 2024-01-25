@@ -9,18 +9,12 @@ export const authOptions = {
   pages: {
     signIn: "/login",
   },
-  session: {
-    strategy: "jwt",
-  },
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: {
-          label: "Email",
-          type: "email",
-          placeholder: "lorem@email.com",
-        },
+        email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
@@ -29,9 +23,9 @@ export const authOptions = {
         const existingUser = await getUserByEmail(credentials.email);
         if (!existingUser) return null;
 
-        const passwordMatch = bcrypt.compare(
-          existingUser.password,
-          credentials.password
+        const passwordMatch = await bcrypt.compare(
+          credentials.password,
+          existingUser.password
         );
         if (!passwordMatch) return null;
 

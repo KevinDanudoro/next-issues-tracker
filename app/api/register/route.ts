@@ -17,13 +17,16 @@ export async function POST(req: NextRequest) {
   if (existingUser)
     return NextResponse.json("Email has already in use", { status: 400 });
 
-  const password = await bcrypt.hash(validUser.data.password, 10);
+  const hashedPassword = await bcrypt.hash(validUser.data.password, 10);
+  console.log(validUser.data.password);
+  console.log(hashedPassword);
+
   const newUser = await prisma.user.create({
     data: {
       email: validUser.data.email,
       username: validUser.data.username,
-      password: password,
-      role: validUser.data.role,
+      password: hashedPassword,
+      role: validUser.data.role || "USER",
     },
   });
 
