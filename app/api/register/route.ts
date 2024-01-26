@@ -1,7 +1,7 @@
 import prisma from "@/prisma/client";
 import { userSchema } from "@/schema/validationSchema";
 import { NextRequest, NextResponse } from "next/server";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { getUserByEmail } from "@/lib/db";
 
 export async function POST(req: NextRequest) {

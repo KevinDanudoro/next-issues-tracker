@@ -34,7 +34,6 @@ const Page: FC<PageProps> = ({}) => {
       redirect: false,
       ...data,
     });
-    console.log(signInData);
     if (!signInData?.error) {
       router.push("/");
     } else {
