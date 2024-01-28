@@ -11,3 +11,15 @@ export async function getUserByEmail(email: string) {
 
   return user;
 }
+
+export async function getUserByID(id: number) {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: id,
+    },
+  });
+
+  if (!user) return null;
+
+  return user;
+}
