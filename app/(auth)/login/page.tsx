@@ -5,21 +5,20 @@ import { loginSchema } from "@/schema/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, TextField } from "@radix-ui/themes";
 import Link from "next/link";
-import React from "react";
+import React, { useTransition } from "react";
 import type { FC } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { signIn } from "next-auth/react";
 import Divider from "../Divider";
 import { useNotifContext } from "@/context/NotifContext";
-import { useRouter } from "next/navigation";
+import { login } from "@/lib/action";
 
 interface PageProps {}
 
 type LoginForm = z.infer<typeof loginSchema>;
 
 const Page: FC<PageProps> = ({}) => {
-  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const { showNotif } = useNotifContext();
   const {
     register,
@@ -30,15 +29,13 @@ const Page: FC<PageProps> = ({}) => {
   });
 
   const onSubmit = handleSubmit(async (data: LoginForm) => {
-    const signInData = await signIn("credentials", {
-      redirect: false,
-      ...data,
+    startTransition(() => {
+      login(data)
+        .then((res) => {
+          if (res?.error) return showNotif(res.error, "error");
+        })
+        .catch((err) => {});
     });
-    if (!signInData?.error) {
-      router.push("/");
-    } else {
-      showNotif("Wrong email or password", "error");
-    }
   });
 
   return (

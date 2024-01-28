@@ -8,6 +8,8 @@ import { getUserByEmail } from "./lib/db";
 export default {
   providers: [
     Credentials({
+      id: "credentials",
+      name: "Credentials",
       async authorize(credentials, request) {
         const validatedField = loginSchema.safeParse(credentials);
         if (!validatedField.success) return null;
@@ -16,10 +18,9 @@ export default {
         const user = await getUserByEmail(email);
 
         if (!user) return null;
-        const passwordMatch = await bcrypt.hash(password, user.password);
+        const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (!passwordMatch) return null;
-
         return {
           id: user.id.toString(),
           email: user.email,
@@ -28,4 +29,7 @@ export default {
       },
     }),
   ],
+  pages: {
+    signIn: "/login",
+  },
 } satisfies NextAuthConfig;

@@ -13,13 +13,11 @@ export default auth((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
 
-  console.log({ isLoggedIn });
-
-  const isApiAuthRoute = nextUrl.pathname.startsWith(apiRoutePrefix);
+  const isPublicApiRoute = apiRoutePrefix.includes(nextUrl.pathname);
   const isPublicRoute = publicRoute.includes(nextUrl.pathname);
 
   // jika client hit ke api maka izinkan
-  if (isApiAuthRoute) return null;
+  if (isPublicApiRoute) return null;
 
   // jika client hit ke url public maka izinkan
   if (isPublicRoute) {

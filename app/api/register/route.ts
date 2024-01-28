@@ -18,8 +18,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json("Email has already in use", { status: 400 });
 
   const hashedPassword = await bcrypt.hash(validUser.data.password, 10);
-  console.log(validUser.data.password);
-  console.log(hashedPassword);
 
   const newUser = await prisma.user.create({
     data: {

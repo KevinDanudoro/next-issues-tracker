@@ -37,6 +37,7 @@ const Page: FC<PageProps> = ({}) => {
         username,
         password,
       });
+      console.log(req);
       if (req.status === 201) {
         showNotif("User successfuly registered", "success");
         startTransition(() => redirect("/login"));
