@@ -1,7 +1,7 @@
 "use server";
 
-import { signIn } from "@/auth";
-import { DEFAULT_PRIVATE_ROUTE } from "@/routes";
+import { signIn, signOut } from "@/auth";
+import { DEFAULT_PRIVATE_ROUTE, DEFAULT_PUBLIC_ROUTE } from "@/routes";
 import { loginSchema } from "@/schema/validationSchema";
 import { AuthError } from "next-auth";
 import { z } from "zod";
@@ -22,6 +22,15 @@ export const login = async (data: z.infer<typeof loginSchema>) => {
           return { error: "Something went wrong" };
       }
     }
+    throw error;
+  }
+};
+
+export const logout = async () => {
+  try {
+    await signOut({ redirectTo: DEFAULT_PUBLIC_ROUTE });
+  } catch (error) {
+    if (error instanceof AuthError) return { error: "Something went wrong" };
     throw error;
   }
 };

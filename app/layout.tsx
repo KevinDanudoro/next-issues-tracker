@@ -4,9 +4,10 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Theme, ThemePanel } from "@radix-ui/themes";
+import { Theme } from "@radix-ui/themes";
 import NotifContextProvider from "@/context/NotifContext";
 import Notif from "@/components/Notif";
+import { SessionProvider } from "next-auth/react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,12 +28,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body>
-        <NotifContextProvider>
-          <Theme appearance="light" accentColor="brown">
-            <Notif />
-            <main>{children}</main>
-          </Theme>
-        </NotifContextProvider>
+        <SessionProvider>
+          <NotifContextProvider>
+            <Theme appearance="light" accentColor="brown">
+              <Notif />
+              <main>{children}</main>
+            </Theme>
+          </NotifContextProvider>
+        </SessionProvider>
       </body>
     </html>
   );
