@@ -44,7 +44,7 @@ const Page: FC = ({}) => {
   });
 
   return (
-    <form className="max-w-xl space-y-3" onSubmit={onSubmit}>
+    <form className="max-w-xl space-y-3 mx-6" onSubmit={onSubmit}>
       <TextField.Root>
         <TextField.Input placeholder="Title" {...register("title")} />
       </TextField.Root>

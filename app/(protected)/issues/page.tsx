@@ -7,7 +7,7 @@ interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
   return (
-    <div>
+    <div className="mx-6">
       <Button>
         <Link href="/issues/new">New issue</Link>
       </Button>
