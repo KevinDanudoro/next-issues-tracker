@@ -1,8 +1,17 @@
-import { logout } from "@/lib/action";
-import { Avatar, DropdownMenu } from "@radix-ui/themes";
 import { useSession } from "next-auth/react";
 import React from "react";
 import type { FC } from "react";
+import { logout } from "@/lib/action";
+import {
+  Avatar,
+  DropdownMenuRoot,
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+  DropdownMenuContent,
+  DropdownMenuSeparator,
+} from "@radix-ui/themes";
+import { FaRegUser } from "react-icons/fa";
+import { FiLogOut } from "react-icons/fi";
 
 interface AvatarMenuProps {}
 
@@ -10,42 +19,27 @@ const AvatarMenu: FC<AvatarMenuProps> = ({}) => {
   const session = useSession();
   const inisial = session.data?.user.name?.charAt(0);
   return (
-    <DropdownMenu.Root>
-      <DropdownMenu.Trigger>
+    <DropdownMenuRoot>
+      <DropdownMenuTrigger>
         <button className="ml-auto">
           <Avatar fallback={inisial ?? "U"} radius="full" variant="solid" />
         </button>
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
-        <DropdownMenu.Item shortcut="⌘ E">Edit</DropdownMenu.Item>
-        <DropdownMenu.Item shortcut="⌘ D">Duplicate</DropdownMenu.Item>
-        <DropdownMenu.Separator />
-        <DropdownMenu.Item shortcut="⌘ N">Archive</DropdownMenu.Item>
-
-        <DropdownMenu.Sub>
-          <DropdownMenu.SubTrigger>More</DropdownMenu.SubTrigger>
-          <DropdownMenu.SubContent>
-            <DropdownMenu.Item>Move to project…</DropdownMenu.Item>
-            <DropdownMenu.Item>Move to folder…</DropdownMenu.Item>
-
-            <DropdownMenu.Separator />
-            <DropdownMenu.Item>Advanced options…</DropdownMenu.Item>
-          </DropdownMenu.SubContent>
-        </DropdownMenu.Sub>
-
-        <DropdownMenu.Separator />
-        <DropdownMenu.Item>Share</DropdownMenu.Item>
-        <DropdownMenu.Item>Add to favorites</DropdownMenu.Item>
-        <DropdownMenu.Separator />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem className="space-x-10">
+          <p>Profile</p> <FaRegUser />
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <form action={logout}>
           <button type="submit">
-            <DropdownMenu.Item shortcut="⌘ ⌫" color="red">
-              Logout
-            </DropdownMenu.Item>
+            <DropdownMenuItem color="red" className="space-x-10">
+              <p>Logout</p>
+              <FiLogOut />
+            </DropdownMenuItem>
           </button>
         </form>
-      </DropdownMenu.Content>
-    </DropdownMenu.Root>
+      </DropdownMenuContent>
+    </DropdownMenuRoot>
   );
 };
 
