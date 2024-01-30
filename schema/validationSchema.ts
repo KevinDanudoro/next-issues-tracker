@@ -5,6 +5,13 @@ export const createIssueSchema = z.object({
   description: z.string().min(1, "Description is required"),
 });
 
+export const readIssueSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  createdAt: z.string().datetime(),
+  status: z.enum(["OPEN", "CLOSED"]),
+});
+
 export const userSchema = z.object({
   email: z.string().min(1, "Email is required").email("Not valid email format"),
   username: z.string().min(1, "Username is required"),
