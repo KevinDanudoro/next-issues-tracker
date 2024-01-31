@@ -1,9 +1,6 @@
-import { readIssueSchema } from "@/schema/validationSchema";
-import { z } from "zod";
+import { ReadIssue } from "@/schema/inferedSchema";
 
-type Issue = z.infer<typeof readIssueSchema>;
-
-export const issueDatas: Issue[] = [
+export const issueDatas: ReadIssue[] = [
   {
     title: "Kevin",
     description: "Ini masalah kevin",
@@ -15,5 +12,11 @@ export const issueDatas: Issue[] = [
     description: "Ini masalah Bimo",
     createdAt: "2023-05-21T15:05:10.331Z",
     status: "CLOSED",
+  },
+  {
+    title: "Reja",
+    description: "Ini masalah Reja",
+    createdAt: "2024-01-19T15:05:20.331Z",
+    status: "OPEN",
   },
 ];

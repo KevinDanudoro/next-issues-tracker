@@ -3,9 +3,12 @@ import Link from "next/link";
 import React from "react";
 import type { FC } from "react";
 
-interface TableButtonProps {}
+interface TableButtonProps {
+  disabled: boolean;
+  onClick: () => void;
+}
 
-const TableButton: FC<TableButtonProps> = ({}) => {
+const TableButton: FC<TableButtonProps> = ({ onClick, disabled }) => {
   return (
     <div className="grid grid-cols-8 gap-4 mb-4">
       <Button
@@ -20,7 +23,8 @@ const TableButton: FC<TableButtonProps> = ({}) => {
         variant="soft"
         className="sm:col-start-8 sm:col-span-1 col-start-7 col-span-2"
         size="2"
-        disabled={true}
+        disabled={disabled}
+        onClick={onClick}
       >
         Delete Issues
       </Button>
