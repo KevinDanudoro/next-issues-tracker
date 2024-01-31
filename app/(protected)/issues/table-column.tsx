@@ -26,7 +26,6 @@ export const issueColumn: ColumnDef<ReadIssue>[] = [
         />
       </div>
     ),
-    enableSorting: false,
     enableHiding: false,
   },
   {
@@ -39,10 +38,10 @@ export const issueColumn: ColumnDef<ReadIssue>[] = [
           color="gray"
         >
           Title
-          {column.getIsSorted() === "asc" ? (
-            <FaSortAlphaDown className="ml-2 h-4 w-4" />
-          ) : (
+          {column.getIsSorted() === "desc" ? (
             <FaSortAlphaUp className="ml-2 h-4 w-4" />
+          ) : (
+            <FaSortAlphaDown className="ml-2 h-4 w-4" />
           )}
         </Button>
       );
@@ -50,6 +49,8 @@ export const issueColumn: ColumnDef<ReadIssue>[] = [
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("title")}</div>
     ),
+    enableSorting: true,
+    sortDescFirst: false,
   },
   {
     accessorKey: "description",
