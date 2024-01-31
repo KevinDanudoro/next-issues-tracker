@@ -35,7 +35,7 @@ const Page: FC<PageProps> = ({}) => {
   return (
     <div className="mx-6">
       <TableButton
-        onClick={onDeleteButtonClick}
+        onDeleteButtonClick={onDeleteButtonClick}
         disabled={
           !(table.getIsSomeRowsSelected() || table.getIsAllRowsSelected())
         }
