@@ -9,7 +9,7 @@ export const readIssueSchema = z.object({
   title: z.string(),
   description: z.string(),
   createdAt: z.string().datetime(),
-  status: z.enum(["OPEN", "CLOSED"]),
+  status: z.enum(["OPEN", "IN_PROGRESS", "CLOSED"]),
 });
 
 export const userSchema = z.object({

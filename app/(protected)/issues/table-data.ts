@@ -19,4 +19,10 @@ export const issueDatas: ReadIssue[] = [
     createdAt: "2024-01-19T15:05:20.331Z",
     status: "OPEN",
   },
+  {
+    title: "Jojo",
+    description: "Ini masalah Jojo",
+    createdAt: "2023-09-19T15:05:20.331Z",
+    status: "IN_PROGRESS",
+  },
 ];
