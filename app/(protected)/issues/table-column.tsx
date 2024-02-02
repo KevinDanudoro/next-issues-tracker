@@ -72,12 +72,32 @@ export const issueColumn: ColumnDef<ReadIssue>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: "Created At",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          color="gray"
+        >
+          Created At
+          {column.getIsSorted() === "desc" ? (
+            <FaSortAlphaUp className="ml-2 h-4 w-4" />
+          ) : (
+            <FaSortAlphaDown className="ml-2 h-4 w-4" />
+          )}
+        </Button>
+      );
+    },
     cell: ({ row }) => (
       <div className="capitalize">
         {new Date(row.getValue("createdAt")).toDateString()}
       </div>
     ),
     enableHiding: true,
+    sortingFn: (rowA, rowB, columnId) => {
+      const dateA = new Date(rowA.getValue(columnId));
+      const dateB = new Date(rowB.getValue(columnId));
+      return dateA.getTime() < dateB.getTime() ? 1 : -1;
+    },
   },
 ];
