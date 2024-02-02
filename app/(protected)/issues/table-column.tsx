@@ -49,8 +49,8 @@ export const issueColumn: ColumnDef<ReadIssue>[] = [
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("title")}</div>
     ),
+    enableHiding: false,
     enableSorting: true,
-    sortDescFirst: false,
   },
   {
     accessorKey: "description",
@@ -58,6 +58,7 @@ export const issueColumn: ColumnDef<ReadIssue>[] = [
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("description")}</div>
     ),
+    enableHiding: true,
   },
   {
     accessorKey: "status",
@@ -67,6 +68,7 @@ export const issueColumn: ColumnDef<ReadIssue>[] = [
         <StatusChip status={row.getValue("status")} />
       </div>
     ),
+    enableHiding: true,
   },
   {
     accessorKey: "createdAt",
@@ -76,5 +78,6 @@ export const issueColumn: ColumnDef<ReadIssue>[] = [
         {new Date(row.getValue("createdAt")).toDateString()}
       </div>
     ),
+    enableHiding: true,
   },
 ];
