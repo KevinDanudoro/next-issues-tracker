@@ -49,7 +49,7 @@ const Page: FC<PageProps> = ({}) => {
     <div className="mx-6">
       <div className="grid grid-cols-8 mb-4 gap-2 sm:gap-4 content-center">
         <TableStatusFilter
-          className="col-start-1"
+          className="col-start-1 col-span-4 sm:col-span-2"
           hideableColumn={hideableColumn}
         />
 

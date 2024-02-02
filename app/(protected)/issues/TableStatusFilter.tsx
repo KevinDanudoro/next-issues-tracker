@@ -9,8 +9,7 @@ import {
 import { Column } from "@tanstack/react-table";
 import React from "react";
 import type { FC } from "react";
-import { FaCheck, FaFilter } from "react-icons/fa";
-import { z } from "zod";
+import { FaFilter } from "react-icons/fa";
 
 interface TableStatusFilterProps {
   className: React.HTMLAttributes<HTMLDivElement>["className"];
