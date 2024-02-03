@@ -8,6 +8,7 @@ import {
   ColumnDef,
   ColumnFiltersState,
   getCoreRowModel,
+  getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -20,37 +21,31 @@ import Link from "next/link";
 interface PageProps {}
 
 const Page: FC<PageProps> = ({}) => {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
   const data: ReadIssue[] = issueDatas;
   const columns: ColumnDef<ReadIssue>[] = issueColumn;
   const table = useReactTable({
     columns,
     data,
-    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    state: {
-      columnFilters,
-    },
   });
 
-  const onDeleteButtonClick = () => {
+  const onDeleteAllButtonClick = () => {
     console.log(
       table.getSelectedRowModel().flatRows.map((row) => row.original)
     );
   };
 
-  const hideableColumn = table
-    .getAllColumns()
-    .filter((column) => column.getCanHide());
+  const issueStatus = Array.from(new Set(data.map((d) => d.status)));
 
   return (
     <div className="mx-6">
       <div className="grid grid-cols-8 mb-4 gap-2 sm:gap-4 content-center">
         <TableStatusFilter
           className="col-start-1 col-span-4 sm:col-span-2"
-          hideableColumn={hideableColumn}
+          status={issueStatus}
+          column={table.getColumn("status")}
         />
 
         <Button
@@ -68,7 +63,7 @@ const Page: FC<PageProps> = ({}) => {
           disabled={
             !(table.getIsSomeRowsSelected() || table.getIsAllRowsSelected())
           }
-          onClick={onDeleteButtonClick}
+          onClick={onDeleteAllButtonClick}
         >
           Delete Issues
         </Button>

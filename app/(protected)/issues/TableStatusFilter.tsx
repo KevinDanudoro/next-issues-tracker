@@ -1,4 +1,5 @@
 import { ReadIssue } from "@/schema/inferedSchema";
+import { readIssueSchema } from "@/schema/validationSchema";
 import {
   Button,
   DropdownMenuCheckboxItem,
@@ -10,15 +11,18 @@ import { Column } from "@tanstack/react-table";
 import React from "react";
 import type { FC } from "react";
 import { FaFilter } from "react-icons/fa";
+import { z } from "zod";
 
 interface TableStatusFilterProps {
   className: React.HTMLAttributes<HTMLDivElement>["className"];
-  hideableColumn: Column<ReadIssue>[];
+  status: ("ALL" | z.infer<typeof readIssueSchema.shape.status>)[];
+  column: Column<ReadIssue> | undefined;
 }
 
 const TableStatusFilter: FC<TableStatusFilterProps> = ({
   className,
-  hideableColumn,
+  status,
+  column,
 }) => {
   return (
     <div className={className}>
@@ -30,14 +34,22 @@ const TableStatusFilter: FC<TableStatusFilterProps> = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-40">
-          {hideableColumn.map((col) => (
+          <DropdownMenuCheckboxItem
+            className="space-x-6 capitalize"
+            checked={!column?.getFilterValue()}
+            onCheckedChange={() => column?.setFilterValue(undefined)}
+          >
+            All
+          </DropdownMenuCheckboxItem>
+
+          {status.map((stat) => (
             <DropdownMenuCheckboxItem
-              key={col.id}
+              key={stat}
               className="space-x-6 capitalize"
-              checked={col.getIsVisible()}
-              onCheckedChange={(value) => col.toggleVisibility(!!value)}
+              checked={column?.getFilterValue() === stat}
+              onCheckedChange={() => column?.setFilterValue(stat)}
             >
-              {col.id}
+              {stat.replaceAll("_", " ").toLowerCase()}
             </DropdownMenuCheckboxItem>
           ))}
         </DropdownMenuContent>
