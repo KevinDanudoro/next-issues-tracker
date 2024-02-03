@@ -20,7 +20,13 @@ const IssueTable: FC<IssueTableProps> = ({ table }) => {
             {headerGroup.headers.map((header, i) => (
               <Table.ColumnHeaderCell
                 key={header.id}
-                width={header.id == "select" ? 60 : undefined}
+                width={
+                  header.id == "select"
+                    ? 60
+                    : header.id == "action"
+                    ? 200
+                    : undefined
+                }
               >
                 {header.isPlaceholder
                   ? null

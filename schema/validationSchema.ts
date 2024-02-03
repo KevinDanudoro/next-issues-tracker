@@ -6,6 +6,7 @@ export const createIssueSchema = z.object({
 });
 
 export const readIssueSchema = z.object({
+  id: z.number(),
   title: z.string(),
   description: z.string(),
   createdAt: z.string().datetime(),

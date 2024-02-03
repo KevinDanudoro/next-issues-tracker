@@ -1,8 +1,17 @@
 import { ReadIssue } from "@/schema/inferedSchema";
-import { Button, Checkbox } from "@radix-ui/themes";
+import { Button, Checkbox, IconButton } from "@radix-ui/themes";
 import { ColumnDef } from "@tanstack/react-table";
-import { FaSortAlphaDown, FaSortAlphaUp } from "react-icons/fa";
+import {
+  FaEdit,
+  FaEye,
+  FaSortAlphaDown,
+  FaSortAlphaUp,
+  FaTrash,
+} from "react-icons/fa";
 import StatusChip from "./StatusChip";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import DeleteDialog from "./DeleteDialog";
 
 export const issueColumn: ColumnDef<ReadIssue>[] = [
   {
@@ -99,5 +108,38 @@ export const issueColumn: ColumnDef<ReadIssue>[] = [
       const dateB = new Date(rowB.getValue(columnId));
       return dateA.getTime() < dateB.getTime() ? 1 : -1;
     },
+  },
+  {
+    accessorKey: "action",
+    header: "Action",
+    cell: ({ row }) => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const path = usePathname();
+      return (
+        <div className="space-x-4">
+          <Link href={`${path}/detail/${row.id}`}>
+            <IconButton variant="soft">
+              <FaEye />
+            </IconButton>
+          </Link>
+
+          <Link href={`${path}/edit/${row.id}`}>
+            <IconButton variant="soft">
+              <FaEdit />
+            </IconButton>
+          </Link>
+
+          <DeleteDialog
+            trigger={
+              <IconButton color="red">
+                <FaTrash />
+              </IconButton>
+            }
+            deletedContent={row.getValue("title")}
+          />
+        </div>
+      );
+    },
+    enableHiding: false,
   },
 ];
