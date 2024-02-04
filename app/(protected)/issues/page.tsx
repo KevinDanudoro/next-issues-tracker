@@ -2,41 +2,43 @@
 
 import React from "react";
 import type { FC } from "react";
-import IssueTable from "./new/IssueTable";
-import { issueDatas } from "./table-data";
+import Link from "next/link";
+import { Button } from "@radix-ui/themes";
 import {
-  ColumnDef,
   getCoreRowModel,
   getFilteredRowModel,
+  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ReadIssue } from "@/schema/inferedSchema";
+import IssueTable from "./new/IssueTable";
+import { issueData } from "./table-data";
 import { issueColumn } from "./table-column";
 import TableStatusFilter from "./TableStatusFilter";
-import { Button } from "@radix-ui/themes";
-import Link from "next/link";
 
 interface PageProps {}
 
 const Page: FC<PageProps> = ({}) => {
-  const data: ReadIssue[] = issueDatas;
-  const columns: ColumnDef<ReadIssue>[] = issueColumn;
   const table = useReactTable({
-    columns,
-    data,
+    columns: issueColumn,
+    data: issueData,
+    getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    initialState: {
+      pagination: {
+        pageSize: 6,
+      },
+    },
   });
+  const issueStatus = Array.from(new Set(issueData.map((d) => d.status)));
 
   const onDeleteAllButtonClick = () => {
     console.log(
       table.getSelectedRowModel().flatRows.map((row) => row.original)
     );
   };
-
-  const issueStatus = Array.from(new Set(data.map((d) => d.status)));
 
   return (
     <div className="mx-6 grid grid-cols-8 mb-4 gap-2 sm:gap-4 content-center">
@@ -68,6 +70,23 @@ const Page: FC<PageProps> = ({}) => {
       </Button>
 
       <IssueTable table={table} className="col-span-full" />
+
+      <div className="col-span-full flex justify-center gap-x-4">
+        <Button
+          className="w-24"
+          disabled={!table.getCanPreviousPage()}
+          onClick={() => table.previousPage()}
+        >
+          Previous
+        </Button>
+        <Button
+          className="w-24"
+          disabled={!table.getCanNextPage()}
+          onClick={() => table.nextPage()}
+        >
+          Next
+        </Button>
+      </div>
     </div>
   );
 };
