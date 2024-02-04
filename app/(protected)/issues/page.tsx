@@ -14,12 +14,12 @@ import {
 import IssueTable from "./new/IssueTable";
 import { issueColumn } from "./table-column";
 import TableStatusFilter from "./TableStatusFilter";
-import { useFetchIssues } from "@/hooks/issue";
+import { useGetIssues } from "@/hooks/issue";
 
 interface PageProps {}
 
 const Page: FC<PageProps> = ({}) => {
-  const { data, isLoading, isError } = useFetchIssues();
+  const { data, isLoading, isError } = useGetIssues();
 
   const table = useReactTable({
     columns: issueColumn,

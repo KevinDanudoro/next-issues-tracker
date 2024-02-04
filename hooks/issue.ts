@@ -1,13 +1,13 @@
 import { readIssueSchema } from "@/schema/validationSchema";
+import axios from "axios";
 import { useQuery } from "react-query";
 
-export const useFetchIssues = () => {
+export const useGetIssues = () => {
   const { data, isLoading, isError } = useQuery(["issues"], async () => {
-    const req = await fetch("/api/issues");
-    const response = await req.json();
-    const validatedResponse = readIssueSchema.array().safeParse(response);
+    const response = await axios.get("/api/issues");
+    const validatedResponse = readIssueSchema.array().safeParse(response.data);
     if (validatedResponse.success) return validatedResponse.data;
-    return undefined;
+    throw validatedResponse.error.format();
   });
 
   return { data, isLoading, isError };
