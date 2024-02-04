@@ -8,12 +8,13 @@ import { z } from "zod";
 type Issue = z.infer<typeof readIssueSchema>;
 
 interface IssueTableProps {
+  className: React.HTMLAttributes<HTMLDivElement>["className"];
   table: TanstackTable<Issue>;
 }
 
-const IssueTable: FC<IssueTableProps> = ({ table }) => {
+const IssueTable: FC<IssueTableProps> = ({ table, className }) => {
   return (
-    <Table.Root variant="surface">
+    <Table.Root variant="surface" className={className}>
       <Table.Header className="capitalize">
         {table.getHeaderGroups().map((headerGroup) => (
           <Table.Row key={headerGroup.id}>
