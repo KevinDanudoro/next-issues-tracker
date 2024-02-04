@@ -3,7 +3,6 @@ import { Button, Checkbox, IconButton } from "@radix-ui/themes";
 import { ColumnDef } from "@tanstack/react-table";
 import {
   FaEdit,
-  FaEye,
   FaSortAlphaDown,
   FaSortAlphaUp,
   FaTrash,
@@ -119,12 +118,6 @@ export const issueColumn: ColumnDef<ReadIssue>[] = [
       const path = usePathname();
       return (
         <div className="space-x-4">
-          <Link href={`${path}/detail/${row.id}`}>
-            <IconButton variant="soft">
-              <FaEye />
-            </IconButton>
-          </Link>
-
           <Link href={`${path}/edit/${row.id}`}>
             <IconButton variant="soft">
               <FaEdit />

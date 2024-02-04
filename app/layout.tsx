@@ -8,6 +8,7 @@ import { Theme } from "@radix-ui/themes";
 import NotifContextProvider from "@/context/NotifContext";
 import Notif from "@/components/Notif";
 import { SessionProvider } from "next-auth/react";
+import ReactQueryProvider from "@/components/ReactQueryProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -29,12 +30,14 @@ export default function RootLayout({
     <html lang="en" className={inter.variable}>
       <body>
         <SessionProvider>
-          <NotifContextProvider>
-            <Theme appearance="light" accentColor="brown">
-              <Notif />
-              <main>{children}</main>
-            </Theme>
-          </NotifContextProvider>
+          <ReactQueryProvider>
+            <NotifContextProvider>
+              <Theme appearance="light" accentColor="brown">
+                <Notif />
+                <main>{children}</main>
+              </Theme>
+            </NotifContextProvider>
+          </ReactQueryProvider>
         </SessionProvider>
       </body>
     </html>

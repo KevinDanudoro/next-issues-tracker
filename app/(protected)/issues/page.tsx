@@ -12,16 +12,18 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import IssueTable from "./new/IssueTable";
-import { issueData } from "./table-data";
 import { issueColumn } from "./table-column";
 import TableStatusFilter from "./TableStatusFilter";
+import { useFetchIssues } from "@/hooks/issue";
 
 interface PageProps {}
 
 const Page: FC<PageProps> = ({}) => {
+  const { data, isLoading, isError } = useFetchIssues();
+
   const table = useReactTable({
     columns: issueColumn,
-    data: issueData,
+    data: data ?? [],
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getCoreRowModel: getCoreRowModel(),
@@ -32,7 +34,7 @@ const Page: FC<PageProps> = ({}) => {
       },
     },
   });
-  const issueStatus = Array.from(new Set(issueData.map((d) => d.status)));
+  const issueStatus = Array.from(new Set(data?.map((d) => d.status)));
 
   const onDeleteAllButtonClick = () => {
     console.log(
@@ -69,7 +71,11 @@ const Page: FC<PageProps> = ({}) => {
         Delete Issues
       </Button>
 
-      <IssueTable table={table} className="col-span-full" />
+      <IssueTable
+        table={table}
+        isLoading={isLoading}
+        className="col-span-full"
+      />
 
       <div className="col-span-full flex justify-center gap-x-4">
         <Button
