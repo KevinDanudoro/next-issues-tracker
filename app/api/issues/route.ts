@@ -20,6 +20,19 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+  const validatedId = z.coerce.number().safeParse(id);
+
+  if (validatedId.success && id != null) {
+    const issues = await prisma.issue.findUnique({
+      where: {
+        id: validatedId.data,
+      },
+    });
+    return NextResponse.json(issues, { status: 200 });
+  }
+
   const issues = await prisma.issue.findMany();
   return NextResponse.json(issues, { status: 200 });
 }

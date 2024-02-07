@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import type { FC } from "react";
 import Link from "next/link";
 import { Button } from "@radix-ui/themes";
@@ -15,15 +15,20 @@ import IssueTable from "./IssueTable";
 import { issueColumn } from "./table-column";
 import TableStatusFilter from "./TableStatusFilter";
 import { useGetIssues } from "@/hooks/issue";
+import { z } from "zod";
+import { readIssueSchema } from "@/schema/validationSchema";
 
 interface PageProps {}
 
 const Page: FC<PageProps> = ({}) => {
-  const { data, isLoading, isError } = useGetIssues();
+  const [issueStatus, setIssueStatus] = useState<
+    z.infer<typeof readIssueSchema.shape.status>[]
+  >([]);
+  const { data: issueData, isLoading, isError } = useGetIssues();
 
   const table = useReactTable({
     columns: issueColumn,
-    data: data ?? [],
+    data: issueData ?? [],
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getCoreRowModel: getCoreRowModel(),
@@ -34,13 +39,19 @@ const Page: FC<PageProps> = ({}) => {
       },
     },
   });
-  const issueStatus = Array.from(new Set(data?.map((d) => d.status)));
 
   const onDeleteAllButtonClick = () => {
     console.log(
       table.getSelectedRowModel().flatRows.map((row) => row.original)
     );
   };
+
+  useEffect(() => {
+    if (issueData?.length) {
+      const status = issueData.map((d) => d.status);
+      setIssueStatus(Array.from(new Set(status)));
+    }
+  }, [issueData]);
 
   return (
     <div className="grid grid-cols-8 mb-4 gap-2 sm:gap-4 content-center">
@@ -74,6 +85,7 @@ const Page: FC<PageProps> = ({}) => {
       <IssueTable
         table={table}
         isLoading={isLoading}
+        isError={isError}
         className="col-span-full"
       />
 

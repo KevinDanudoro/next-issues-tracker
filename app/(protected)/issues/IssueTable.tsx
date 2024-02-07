@@ -1,3 +1,4 @@
+import ErrorMessage from "@/components/ErrorMessage";
 import { readIssueSchema } from "@/schema/validationSchema";
 import { Table } from "@radix-ui/themes";
 import { Table as TanstackTable, flexRender } from "@tanstack/react-table";
@@ -12,9 +13,15 @@ interface IssueTableProps {
   className: React.HTMLAttributes<HTMLDivElement>["className"];
   table: TanstackTable<Issue>;
   isLoading?: boolean;
+  isError?: boolean;
 }
 
-const IssueTable: FC<IssueTableProps> = ({ table, className, isLoading }) => {
+const IssueTable: FC<IssueTableProps> = ({
+  table,
+  className,
+  isLoading,
+  isError,
+}) => {
   return (
     <Table.Root variant="surface" className={className}>
       <Table.Header className="capitalize">
@@ -44,12 +51,19 @@ const IssueTable: FC<IssueTableProps> = ({ table, className, isLoading }) => {
       </Table.Header>
 
       <Table.Body>
-        {isLoading ? (
+        {isLoading || isError ? (
           <Table.Row align="center">
             <Table.Cell colSpan={10}>
-              <div className="flex justify-center items-center animate-spin">
-                <FaSpinner size={30} />
-              </div>
+              {isLoading && (
+                <div className="flex justify-center items-center animate-spin">
+                  <FaSpinner size={30} />
+                </div>
+              )}
+              {isError && (
+                <div className="flex justify-center items-center">
+                  <ErrorMessage>Something went wrong</ErrorMessage>
+                </div>
+              )}
             </Table.Cell>
           </Table.Row>
         ) : (
