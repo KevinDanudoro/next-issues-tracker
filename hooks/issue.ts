@@ -1,6 +1,8 @@
+import { NotifType } from "@/context/NotifContext";
+import { ReadIssue } from "@/schema/inferedSchema";
 import { readIssueSchema } from "@/schema/validationSchema";
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
 export const useGetIssues = () => {
   const { data, isLoading, isError } = useQuery(["issues"], async () => {
@@ -23,4 +25,31 @@ export const useGetIssueById = (id: string) => {
   });
 
   return { data };
+};
+
+export const useDeleteIssueMutation = (
+  notifCallback: (message: string, type: NotifType) => void
+) => {
+  const queryClient = useQueryClient();
+
+  const deleteIssue = async (id: number) => {
+    const res = await axios.delete("/api/issues", {
+      params: { id },
+    });
+    return res.data;
+  };
+
+  const { mutate, isLoading, error } = useMutation(deleteIssue, {
+    onSuccess: (_, id) => {
+      notifCallback("Success delete issue", "success");
+      queryClient.setQueryData(["issues"], (issues?: ReadIssue[]) => {
+        return issues?.filter((issue) => issue.id !== id) ?? [];
+      });
+    },
+    onError: (error: Error) => {
+      notifCallback(error.message, "error");
+    },
+  });
+
+  return { mutate, isLoading, error };
 };

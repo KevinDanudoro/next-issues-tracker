@@ -6,7 +6,7 @@ interface LoadingProps {}
 
 const Loading: FC<LoadingProps> = ({}) => {
   return (
-    <div className="grid grid-cols-8 grid-rows-8 mx-6 gap-4">
+    <div className="grid grid-cols-8 grid-rows-8 gap-4">
       {/* <Button>
         <Link href="/issues/new">New issue</Link>
       </Button> */}

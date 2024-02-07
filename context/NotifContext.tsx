@@ -3,7 +3,7 @@
 import React, { createContext, useContext } from "react";
 import { useState } from "react";
 
-type NotifType = "error" | "success" | "warning";
+export type NotifType = "error" | "success" | "warning";
 
 interface INotifContent {
   show: boolean;

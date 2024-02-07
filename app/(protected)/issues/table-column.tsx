@@ -113,7 +113,7 @@ export const issueColumn: ColumnDef<ReadIssue>[] = [
   {
     accessorKey: "action",
     header: "Action",
-    cell: ({ row }) => {
+    cell: ({ row, table }) => {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const path = usePathname();
       return (
@@ -125,12 +125,15 @@ export const issueColumn: ColumnDef<ReadIssue>[] = [
           </Link>
 
           <DeleteDialog
+            onSubmitButtonClick={async () => {
+              table.options.meta?.removeRow(row.original.id);
+            }}
+            deletedContent={row.getValue("title")}
             trigger={
               <IconButton color="red">
                 <FaTrash />
               </IconButton>
             }
-            deletedContent={row.getValue("title")}
           />
         </div>
       );

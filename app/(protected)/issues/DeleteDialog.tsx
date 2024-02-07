@@ -3,11 +3,16 @@ import React from "react";
 import type { FC } from "react";
 
 interface DeleteDialogProps {
+  onSubmitButtonClick: () => void;
   deletedContent?: string;
   trigger?: React.ReactNode;
 }
 
-const DeleteDialog: FC<DeleteDialogProps> = ({ trigger, deletedContent }) => {
+const DeleteDialog: FC<DeleteDialogProps> = ({
+  trigger,
+  deletedContent,
+  onSubmitButtonClick,
+}) => {
   return (
     <Dialog.Root>
       <Dialog.Trigger>{trigger}</Dialog.Trigger>
@@ -27,7 +32,7 @@ const DeleteDialog: FC<DeleteDialogProps> = ({ trigger, deletedContent }) => {
             </Button>
           </Dialog.Close>
           <Dialog.Close>
-            <Button>Yes</Button>
+            <Button onClick={onSubmitButtonClick}>Yes</Button>
           </Dialog.Close>
         </Flex>
       </Dialog.Content>

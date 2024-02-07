@@ -41,6 +41,12 @@ export async function PUT(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
 
+  if (id === undefined)
+    return NextResponse.json(
+      { error: true, message: "id is undefined" },
+      { status: 400 }
+    );
+
   const validatedId = z.coerce.number().safeParse(id);
   if (!validatedId.success)
     return NextResponse.json(validatedId.error.format(), { status: 400 });
@@ -57,4 +63,26 @@ export async function PUT(req: NextRequest) {
     data: updatedIssue.data,
   });
   return NextResponse.json(update, { status: 200 });
+}
+
+export async function DELETE(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+
+  if (id === undefined)
+    return NextResponse.json(
+      { error: true, message: "id is undefined" },
+      { status: 400 }
+    );
+
+  const validatedId = z.coerce.number().safeParse(id);
+  if (!validatedId.success)
+    return NextResponse.json(validatedId.error.format(), { status: 400 });
+
+  const deleteIssue = await prisma.issue.delete({
+    where: {
+      id: validatedId.data,
+    },
+  });
+  return NextResponse.json(deleteIssue, { status: 200 });
 }
