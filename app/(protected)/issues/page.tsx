@@ -11,7 +11,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import IssueTable from "./new/IssueTable";
+import IssueTable from "./IssueTable";
 import { issueColumn } from "./table-column";
 import TableStatusFilter from "./TableStatusFilter";
 import { useGetIssues } from "@/hooks/issue";
@@ -43,7 +43,7 @@ const Page: FC<PageProps> = ({}) => {
   };
 
   return (
-    <div className="mx-6 grid grid-cols-8 mb-4 gap-2 sm:gap-4 content-center">
+    <div className="grid grid-cols-8 mb-4 gap-2 sm:gap-4 content-center">
       <TableStatusFilter
         className="col-start-1 col-span-4 sm:col-span-2"
         status={issueStatus}

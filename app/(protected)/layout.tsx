@@ -6,7 +6,7 @@ const Layout = async ({ children }: PropsWithChildren) => {
   return (
     <div>
       <Navbar />
-      {children}
+      <div className="mx-6">{children}</div>
     </div>
   );
 };

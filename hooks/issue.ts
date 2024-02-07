@@ -6,8 +6,8 @@ export const useGetIssues = () => {
   const { data, isLoading, isError } = useQuery(["issues"], async () => {
     const response = await axios.get("/api/issues");
     const validatedResponse = readIssueSchema.array().safeParse(response.data);
-    if (validatedResponse.success) return validatedResponse.data;
-    throw validatedResponse.error.format();
+    if (!validatedResponse.success) throw validatedResponse.error.format();
+    return validatedResponse.data;
   });
 
   return { data, isLoading, isError };

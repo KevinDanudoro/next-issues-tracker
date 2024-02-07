@@ -118,7 +118,7 @@ export const issueColumn: ColumnDef<ReadIssue>[] = [
       const path = usePathname();
       return (
         <div className="space-x-4">
-          <Link href={`${path}/edit/${row.id}`}>
+          <Link href={`${path}/edit/${row.original.id}`}>
             <IconButton variant="soft">
               <FaEdit />
             </IconButton>

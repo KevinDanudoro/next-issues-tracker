@@ -1,23 +1,26 @@
 "use client";
 
-import "easymde/dist/easymde.min.css";
-import type { FC } from "react";
 import React, { useTransition } from "react";
+import type { FC } from "react";
+import { redirect } from "next/navigation";
+import axios, { AxiosError } from "axios";
 import { Button, TextField } from "@radix-ui/themes";
 import { Controller, useForm } from "react-hook-form";
-import SimpleMDE from "react-simplemde-editor";
-import axios, { AxiosError } from "axios";
-import { useNotifContext } from "@/context/NotifContext";
-import { redirect } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createIssueSchema } from "@/schema/validationSchema";
-import { z } from "zod";
+import SimpleMDE from "react-simplemde-editor";
+
 import ErrorMessage from "@/components/ErrorMessage";
 import Spinner from "@/components/Spinner";
+import { editIssueSchema } from "@/schema/validationSchema";
+import { Createissue } from "@/schema/inferedSchema";
+import { useNotifContext } from "@/context/NotifContext";
+import "easymde/dist/easymde.min.css";
 
-type IssueForm = z.infer<typeof createIssueSchema>;
+interface PageProps {
+  params: { id: string };
+}
 
-const Page: FC = ({}) => {
+const Page: FC<PageProps> = ({ params }) => {
   const { showNotif } = useNotifContext();
   const [, startTransition] = useTransition();
   const {
@@ -25,15 +28,15 @@ const Page: FC = ({}) => {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<IssueForm>({
-    resolver: zodResolver(createIssueSchema),
+  } = useForm<Createissue>({
+    resolver: zodResolver(editIssueSchema),
   });
 
-  const onSubmit = handleSubmit(async (data: IssueForm) => {
+  const onSubmit = handleSubmit(async (data: Createissue) => {
     try {
-      const req = await axios.post("/api/issues", data);
-      if (req.status == 201) {
-        showNotif("Success creating issue", "success");
+      const req = await axios.put(`/api/issues?id=${params.id}`, data);
+      if (req.status == 200) {
+        showNotif("Success editing issue", "success");
         startTransition(() => redirect("/issues"));
       }
     } catch (e) {
@@ -58,7 +61,7 @@ const Page: FC = ({}) => {
       />
       <ErrorMessage>{errors.description?.message}</ErrorMessage>
       <Button disabled={isSubmitting}>
-        Submit new issue <Spinner isLoading={isSubmitting} />
+        Edit issue <Spinner isLoading={isSubmitting} />
       </Button>
     </form>
   );
