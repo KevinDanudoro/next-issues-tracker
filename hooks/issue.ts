@@ -1,5 +1,4 @@
-import { NotifType } from "@/context/NotifContext";
-import { ReadIssue } from "@/schema/inferedSchema";
+import { EditIssue, ReadIssue } from "@/schema/inferedSchema";
 import { readIssueSchema } from "@/schema/validationSchema";
 import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -17,7 +16,7 @@ export const useGetIssues = () => {
 };
 
 export const useGetIssueById = (id: string) => {
-  const { data } = useQuery(["issues"], async () => {
+  const { data } = useQuery(["issues", { id }], async () => {
     const response = await axios.get("/api/issues", { params: { id } });
     const validatedResponse = readIssueSchema.safeParse(response.data);
     if (!validatedResponse.success) throw validatedResponse.error.format();
@@ -27,8 +26,45 @@ export const useGetIssueById = (id: string) => {
   return { data };
 };
 
+export const useEditIssueMutation = (
+  onSuccess: () => void,
+  onError: (e: Error) => void
+) => {
+  const queryClient = useQueryClient();
+
+  const editIssue = async ({
+    editedIssue,
+    id,
+  }: {
+    editedIssue: EditIssue;
+    id: number;
+  }) => {
+    const res = await axios.put("/api/issues", editedIssue, {
+      params: { id },
+    });
+    return res.data;
+  };
+
+  const { mutate, isLoading, error } = useMutation(editIssue, {
+    onSuccess: (_, { id, editedIssue }) => {
+      onSuccess();
+      queryClient.setQueryData(["issues"], (issues?: ReadIssue[]) => {
+        return (
+          issues?.map((issue) =>
+            issue.id === id ? { ...issue, ...editedIssue } : issue
+          ) ?? []
+        );
+      });
+    },
+    onError: onError,
+  });
+
+  return { mutate, isLoading, error };
+};
+
 export const useDeleteIssueMutation = (
-  notifCallback: (message: string, type: NotifType) => void
+  onSuccess: () => void,
+  onError: (e: Error) => void
 ) => {
   const queryClient = useQueryClient();
 
@@ -41,14 +77,12 @@ export const useDeleteIssueMutation = (
 
   const { mutate, isLoading, error } = useMutation(deleteIssue, {
     onSuccess: (_, id) => {
-      notifCallback("Success delete issue", "success");
+      onSuccess();
       queryClient.setQueryData(["issues"], (issues?: ReadIssue[]) => {
         return issues?.filter((issue) => issue.id !== id) ?? [];
       });
     },
-    onError: (error: Error) => {
-      notifCallback(error.message, "error");
-    },
+    onError: onError,
   });
 
   return { mutate, isLoading, error };

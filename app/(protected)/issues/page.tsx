@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import type { FC } from "react";
 import Link from "next/link";
 import { Button } from "@radix-ui/themes";
@@ -15,26 +15,23 @@ import IssueTable from "./IssueTable";
 import { issueColumn } from "./table-column";
 import TableStatusFilter from "./TableStatusFilter";
 import { useDeleteIssueMutation, useGetIssues } from "@/hooks/issue";
-import { z } from "zod";
-import { readIssueSchema } from "@/schema/validationSchema";
 import { useNotifContext } from "@/context/NotifContext";
+import { useIssueStatus } from "@/hooks/issueStatus";
 
 interface PageProps {}
 
 const Page: FC<PageProps> = ({}) => {
-  const { showNotif } = useNotifContext();
   const { data: issueData, isLoading, isError } = useGetIssues();
-  const { mutate: removeIssue } = useDeleteIssueMutation(showNotif);
+  const issueStatus = useIssueStatus(issueData || []);
+  const { showNotif } = useNotifContext();
 
-  const [issueStatus, setIssueStatus] = useState<
-    z.infer<typeof readIssueSchema.shape.status>[]
-  >([]);
-  useEffect(() => {
-    if (issueData?.length) {
-      const status = issueData.map((d) => d.status);
-      setIssueStatus(Array.from(new Set(status)));
-    }
-  }, [issueData]);
+  const onSuccess = () => {
+    showNotif("Success delete issue", "success");
+  };
+  const onError = (e: Error) => {
+    showNotif(e.message, "error");
+  };
+  const { mutate: deleteIssue } = useDeleteIssueMutation(onSuccess, onError);
 
   const table = useReactTable({
     columns: issueColumn,
@@ -50,7 +47,7 @@ const Page: FC<PageProps> = ({}) => {
     },
     meta: {
       removeRow: (id: number) => {
-        removeIssue(id);
+        deleteIssue(id);
       },
     },
   });

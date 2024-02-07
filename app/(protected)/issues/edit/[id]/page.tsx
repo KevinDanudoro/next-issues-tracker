@@ -3,7 +3,6 @@
 import React, { useEffect, useTransition } from "react";
 import type { FC } from "react";
 import { redirect } from "next/navigation";
-import axios, { AxiosError } from "axios";
 import { Button, TextField } from "@radix-ui/themes";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,7 +14,7 @@ import Spinner from "@/components/Spinner";
 import { editIssueSchema } from "@/schema/validationSchema";
 import { EditIssue } from "@/schema/inferedSchema";
 import { useNotifContext } from "@/context/NotifContext";
-import { useGetIssueById } from "@/hooks/issue";
+import { useEditIssueMutation, useGetIssueById } from "@/hooks/issue";
 
 interface PageProps {
   params: { id: string };
@@ -26,30 +25,32 @@ const Page: FC<PageProps> = ({ params }) => {
 
   const { showNotif } = useNotifContext();
   const [, startTransition] = useTransition();
+
+  const onSuccess = () => {
+    showNotif("Success editing issue", "success");
+    startTransition(() => redirect("/issues"));
+  };
+  const onError = (e: Error) => {
+    showNotif(e.message, "error");
+  };
+
+  const { mutate: editIssue, isLoading } = useEditIssueMutation(
+    onSuccess,
+    onError
+  );
+
   const {
     register,
     control,
     handleSubmit,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<EditIssue>({
     resolver: zodResolver(editIssueSchema),
   });
 
   const onSubmit = handleSubmit(async (data: EditIssue) => {
-    try {
-      const req = await axios.put("/api/issues", data, {
-        params: { id: params.id },
-      });
-      if (req.status == 200) {
-        showNotif("Success editing issue", "success");
-        startTransition(() => redirect("/issues"));
-      }
-    } catch (e) {
-      if (e instanceof AxiosError) {
-        showNotif(e.message, "error");
-      }
-    }
+    editIssue({ editedIssue: data, id: Number(params.id) });
   });
 
   useEffect(() => {
@@ -74,8 +75,8 @@ const Page: FC<PageProps> = ({ params }) => {
       />
 
       <ErrorMessage>{errors.description?.message}</ErrorMessage>
-      <Button disabled={isSubmitting}>
-        Edit issue <Spinner isLoading={isSubmitting} />
+      <Button disabled={isLoading}>
+        Edit issue <Spinner isLoading={isLoading} />
       </Button>
     </form>
   );
