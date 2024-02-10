@@ -1,4 +1,4 @@
-import { EditIssue, ReadIssue } from "@/schema/inferedSchema";
+import { Createissue, EditIssue, ReadIssue } from "@/schema/inferedSchema";
 import { readIssueSchema } from "@/schema/validationSchema";
 import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -24,6 +24,36 @@ export const useGetIssueById = (id: string) => {
   });
 
   return { data };
+};
+
+export const useCreateIssueMutation = (
+  onSuccess: () => void,
+  onError: (e: Error) => void
+) => {
+  const queryClient = useQueryClient();
+
+  const createIssue = async (data: Createissue) => {
+    const res = await axios.post("/api/issues", data);
+    const validatedRes = readIssueSchema.safeParse(res.data);
+    if (!validatedRes.success) return null;
+    return validatedRes.data;
+  };
+
+  const { mutate } = useMutation(createIssue, {
+    onSuccess: (data) => {
+      queryClient.setQueryData(["issues"], (currentIssues?: ReadIssue[]) => {
+        if (!data && currentIssues) return currentIssues;
+        if (data && !currentIssues) return [data];
+        if (!data || !currentIssues) return [];
+        const newIssues = currentIssues.concat(data);
+        return newIssues;
+      });
+      onSuccess();
+    },
+    onError: onError,
+  });
+
+  return { mutate };
 };
 
 export const useEditIssueMutation = (
