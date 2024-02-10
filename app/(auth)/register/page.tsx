@@ -10,10 +10,9 @@ import { registerSchema } from "@/schema/validationSchema";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import { useNotifContext } from "@/context/NotifContext";
 import { redirect } from "next/navigation";
-import { axiosInstance } from "@/lib/axios";
 
 interface PageProps {}
 
@@ -33,7 +32,7 @@ const Page: FC<PageProps> = ({}) => {
   const onSubmit = handleSubmit(async (data: RegisterForm) => {
     const { email, username, password } = data;
     try {
-      const req = await axiosInstance.post("/register", {
+      const req = await axios.post("/register", {
         email,
         username,
         password,
