@@ -1,11 +1,11 @@
+import { axiosInstance } from "@/lib/axios";
 import { Createissue, EditIssue, ReadIssue } from "@/schema/inferedSchema";
 import { readIssueSchema } from "@/schema/validationSchema";
-import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 export const useGetIssues = () => {
   const { data, isLoading, isError } = useQuery(["issues"], async () => {
-    const response = await axios.get("/api/issues");
+    const response = await axiosInstance.get("/issues");
     const validatedResponse = readIssueSchema.array().safeParse(response.data);
 
     if (!validatedResponse.success) throw validatedResponse.error.format();
@@ -17,7 +17,7 @@ export const useGetIssues = () => {
 
 export const useGetIssueById = (id: string) => {
   const { data } = useQuery(["issues", { id }], async () => {
-    const response = await axios.get("/api/issues", { params: { id } });
+    const response = await axiosInstance.get("/issues", { params: { id } });
     const validatedResponse = readIssueSchema.safeParse(response.data);
     if (!validatedResponse.success) throw validatedResponse.error.format();
     return validatedResponse.data;
@@ -33,7 +33,7 @@ export const useCreateIssueMutation = (
   const queryClient = useQueryClient();
 
   const createIssue = async (data: Createissue) => {
-    const res = await axios.post("/api/issues", data);
+    const res = await axiosInstance.post("/issues", data);
     const validatedRes = readIssueSchema.safeParse(res.data);
     if (!validatedRes.success) return null;
     return validatedRes.data;
@@ -69,7 +69,7 @@ export const useEditIssueMutation = (
     editedIssue: EditIssue;
     id: number;
   }) => {
-    const res = await axios.put("/api/issues", editedIssue, {
+    const res = await axiosInstance.put("/issues", editedIssue, {
       params: { id },
     });
     return res.data;
@@ -99,7 +99,7 @@ export const useDeleteIssueMutation = (
   const queryClient = useQueryClient();
 
   const deleteIssue = async (id: number) => {
-    const res = await axios.delete("/api/issues", {
+    const res = await axiosInstance.delete("/issues", {
       params: { id },
     });
     return res.data;
@@ -125,7 +125,7 @@ export const useDeleteManyIssuesMutation = (
   const queryClient = useQueryClient();
 
   const deleteIssue = async (id: number[]) => {
-    const res = await axios.delete("/api/issues", {
+    const res = await axiosInstance.delete("/issues", {
       params: { id },
     });
     return res.data;
@@ -134,7 +134,7 @@ export const useDeleteManyIssuesMutation = (
   const { mutate, isLoading, error } = useMutation(deleteIssue, {
     onSuccess: () => {
       onSuccess();
-      queryClient.invalidateQueries(["issues"]);
+      queryClient.invalidateQueries(["issues"], { exact: true });
     },
     onError: onError,
   });
