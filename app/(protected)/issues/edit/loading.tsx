@@ -9,7 +9,8 @@ const Loading: FC<LoadingProps> = ({}) => {
     <div className="flex flex-col gap-4 max-w-xl">
       <Skeleton className="w-full h-10" />
       <Skeleton className="w-full h-64" />
-      <Skeleton className="w-[20%] h-10" />
+      <Skeleton className="w-[40%] h-10" />
+      <Skeleton className="w-full h-10" />
     </div>
   );
 };

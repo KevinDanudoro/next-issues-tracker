@@ -13,7 +13,7 @@ import {
 } from "@tanstack/react-table";
 import IssueTable from "./IssueTable";
 import { issueColumn } from "./table-column";
-import TableStatusFilter from "./TableStatusFilter";
+import DropdownStatusFilter from "./DropdownStatusFilter";
 import { useDeleteIssueMutation, useGetIssues } from "@/hooks/issue";
 import { useNotifContext } from "@/context/NotifContext";
 import { useIssueStatus } from "@/hooks/issueStatus";
@@ -60,7 +60,7 @@ const Page: FC<PageProps> = ({}) => {
 
   return (
     <div className="grid grid-cols-8 mb-4 gap-2 sm:gap-4 content-center">
-      <TableStatusFilter
+      <DropdownStatusFilter
         className="col-start-1 col-span-4 sm:col-span-2"
         status={issueStatus}
         column={table.getColumn("status")}

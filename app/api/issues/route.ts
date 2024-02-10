@@ -1,6 +1,6 @@
 import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import { createIssueSchema } from "../../../schema/validationSchema";
+import { createIssueSchema, editIssueSchema } from "@/schema/validationSchema";
 import { z } from "zod";
 
 export async function POST(req: NextRequest) {
@@ -52,7 +52,7 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json(validatedId.error.format(), { status: 400 });
 
   const body = await req.json();
-  const updatedIssue = createIssueSchema.safeParse(body);
+  const updatedIssue = editIssueSchema.safeParse(body);
   if (!updatedIssue.success)
     return NextResponse.json(updatedIssue.error.format(), { status: 400 });
 
