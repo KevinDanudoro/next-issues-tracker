@@ -1,28 +1,25 @@
 import { Button, Dialog, Flex } from "@radix-ui/themes";
 import React from "react";
-import type { FC } from "react";
+import type { FC, PropsWithChildren } from "react";
 
-interface DeleteDialogProps {
+interface DeleteDialogProps extends PropsWithChildren {
   onSubmitButtonClick: () => void;
-  deletedContent?: string;
-  trigger?: React.ReactNode;
+  message?: string;
 }
 
 const DeleteDialog: FC<DeleteDialogProps> = ({
-  trigger,
-  deletedContent,
+  children,
+  message,
   onSubmitButtonClick,
 }) => {
   return (
     <Dialog.Root>
-      <Dialog.Trigger>{trigger}</Dialog.Trigger>
+      <Dialog.Trigger>{children}</Dialog.Trigger>
 
       <Dialog.Content style={{ maxWidth: 450 }}>
         <Dialog.Title>Delete Issue</Dialog.Title>
         <Dialog.Description size="2" mb="4">
-          Are you sure want to delete {'"'}
-          {deletedContent}
-          {'"'} issue?
+          {message}
         </Dialog.Description>
 
         <Flex gap="3" mt="4" justify="end">

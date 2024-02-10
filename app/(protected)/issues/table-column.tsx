@@ -128,13 +128,14 @@ export const issueColumn: ColumnDef<ReadIssue>[] = [
             onSubmitButtonClick={async () => {
               table.options.meta?.removeRow(row.original.id);
             }}
-            deletedContent={row.getValue("title")}
-            trigger={
-              <IconButton color="red">
-                <FaTrash />
-              </IconButton>
-            }
-          />
+            message={`Are you sure want to delete ${row.getValue(
+              "title"
+            )} issue?`}
+          >
+            <IconButton color="red">
+              <FaTrash />
+            </IconButton>
+          </DeleteDialog>
         </div>
       );
     },

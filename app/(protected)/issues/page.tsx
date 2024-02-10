@@ -14,9 +14,14 @@ import {
 import IssueTable from "./IssueTable";
 import { issueColumn } from "./table-column";
 import DropdownStatusFilter from "./DropdownStatusFilter";
-import { useDeleteIssueMutation, useGetIssues } from "@/hooks/issue";
+import {
+  useDeleteIssueMutation,
+  useDeleteManyIssuesMutation,
+  useGetIssues,
+} from "@/hooks/issue";
 import { useNotifContext } from "@/context/NotifContext";
 import { useIssueStatus } from "@/hooks/issueStatus";
+import DeleteDialog from "./DeleteDialog";
 
 interface PageProps {}
 
@@ -32,6 +37,10 @@ const Page: FC<PageProps> = ({}) => {
     showNotif(e.message, "error");
   };
   const { mutate: deleteIssue } = useDeleteIssueMutation(onSuccess, onError);
+  const { mutate: deleteIssues } = useDeleteManyIssuesMutation(
+    onSuccess,
+    onError
+  );
 
   const table = useReactTable({
     columns: issueColumn,
@@ -53,9 +62,11 @@ const Page: FC<PageProps> = ({}) => {
   });
 
   const onDeleteAllButtonClick = () => {
-    console.log(
-      table.getSelectedRowModel().flatRows.map((row) => row.original)
-    );
+    const deletedIds = table
+      .getSelectedRowModel()
+      .flatRows.map((row) => row.original.id);
+
+    deleteIssues(deletedIds);
   };
 
   return (
@@ -66,26 +77,31 @@ const Page: FC<PageProps> = ({}) => {
         column={table.getColumn("status")}
       />
 
-      <Button
-        variant="solid"
+      <Link
+        href="/issues/new"
         className="col-start-6 col-span-3 sm:col-start-5 sm:col-span-2 lg:col-start-7 lg:col-span-1"
-        size="2"
       >
-        <Link href="/issues/new">New Issue</Link>
-      </Button>
+        <Button variant="solid" size="2" className="w-full">
+          New Issue
+        </Button>
+      </Link>
 
-      <Button
-        color="red"
-        variant="soft"
-        className="col-start-6 col-span-3 sm:col-start-7 sm:col-span-2 lg:col-start-8 lg:col-span-1"
-        size="2"
-        disabled={
-          !(table.getIsSomeRowsSelected() || table.getIsAllRowsSelected())
-        }
-        onClick={onDeleteAllButtonClick}
+      <DeleteDialog
+        onSubmitButtonClick={onDeleteAllButtonClick}
+        message="Are you sure want to delete all issues?"
       >
-        Delete Issues
-      </Button>
+        <Button
+          color="red"
+          variant="soft"
+          className="col-start-6 col-span-3 sm:col-start-7 sm:col-span-2 lg:col-start-8 lg:col-span-1"
+          size="2"
+          disabled={
+            !(table.getIsSomeRowsSelected() || table.getIsAllRowsSelected())
+          }
+        >
+          Delete Issues
+        </Button>
+      </DeleteDialog>
 
       <IssueTable
         table={table}

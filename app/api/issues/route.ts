@@ -68,21 +68,42 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
+  const ids = searchParams.getAll("id[]");
 
-  if (id === undefined)
+  if (id === null && ids.length === 0)
     return NextResponse.json(
       { error: true, message: "id is undefined" },
       { status: 400 }
     );
 
-  const validatedId = z.coerce.number().safeParse(id);
-  if (!validatedId.success)
-    return NextResponse.json(validatedId.error.format(), { status: 400 });
+  if (id) {
+    const validatedId = z.coerce.number().safeParse(id);
+    if (!validatedId.success)
+      return NextResponse.json(validatedId.error.format(), { status: 400 });
 
-  const deleteIssue = await prisma.issue.delete({
-    where: {
-      id: validatedId.data,
-    },
-  });
-  return NextResponse.json(deleteIssue, { status: 200 });
+    const deleteIssues = await prisma.issue.delete({
+      where: {
+        id: validatedId.data,
+      },
+    });
+    return NextResponse.json(deleteIssues, { status: 200 });
+  } else if (ids) {
+    const validatedIds = z.array(z.coerce.number()).safeParse(ids);
+    if (!validatedIds.success)
+      return NextResponse.json(validatedIds.error.format(), { status: 400 });
+
+    const deleteIssues = await prisma.issue.deleteMany({
+      where: {
+        id: {
+          in: validatedIds.data,
+        },
+      },
+    });
+    return NextResponse.json(deleteIssues, { status: 200 });
+  }
+
+  return NextResponse.json(
+    { error: true, message: "Something went wrong" },
+    { status: 500 }
+  );
 }

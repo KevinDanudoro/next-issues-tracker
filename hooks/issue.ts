@@ -87,3 +87,27 @@ export const useDeleteIssueMutation = (
 
   return { mutate, isLoading, error };
 };
+
+export const useDeleteManyIssuesMutation = (
+  onSuccess: () => void,
+  onError: (e: Error) => void
+) => {
+  const queryClient = useQueryClient();
+
+  const deleteIssue = async (id: number[]) => {
+    const res = await axios.delete("/api/issues", {
+      params: { id },
+    });
+    return res.data;
+  };
+
+  const { mutate, isLoading, error } = useMutation(deleteIssue, {
+    onSuccess: () => {
+      onSuccess();
+      queryClient.invalidateQueries(["issues"]);
+    },
+    onError: onError,
+  });
+
+  return { mutate, isLoading, error };
+};

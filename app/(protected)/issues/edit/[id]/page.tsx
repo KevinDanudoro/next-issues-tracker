@@ -63,7 +63,7 @@ const Page: FC<PageProps> = ({ params }) => {
     resolver: zodResolver(editIssueSchema),
   });
 
-  const onSubmit = handleSubmit(async (data: EditIssue) => {
+  const onSubmit = handleSubmit((data: EditIssue) => {
     editIssue({ editedIssue: data, id: Number(params.id) });
   });
 
