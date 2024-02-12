@@ -37,7 +37,7 @@ export default auth((req) => {
     if (isLoggedIn) return;
 
     // jika belum login maka redirect ke halaman login
-    // return Response.redirect(new URL(DEFAULT_PUBLIC_ROUTE, nextUrl));
+    return Response.redirect(new URL(DEFAULT_PUBLIC_ROUTE, nextUrl));
   }
 
   return;

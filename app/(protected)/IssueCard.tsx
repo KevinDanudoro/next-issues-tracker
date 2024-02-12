@@ -7,7 +7,7 @@ import { z } from "zod";
 interface IssueCardProps
   extends React.HTMLAttributes<HTMLDivElement>,
     PropsWithChildren {
-  status: z.infer<typeof readIssueSchema.shape.status>;
+  status?: z.infer<typeof readIssueSchema.shape.status>;
 }
 
 const IssueCard: FC<IssueCardProps> = ({
@@ -20,11 +20,12 @@ const IssueCard: FC<IssueCardProps> = ({
     <div
       className={cn(
         {
-          "hover:border-2 rounded-lg shadow-md transition-colors duration-200":
-            true,
-          "hover:border-red-400 hover:bg-red-50": status === "OPEN",
-          "hover:border-green-400 hover:bg-green-50": status === "CLOSED",
-          "hover:border-yellow-400 hover:bg-yellow-50":
+          "rounded-lg shadow-md transition-colors duration-200": true,
+          "hover:border-2 hover:border-red-400 hover:bg-red-50":
+            status === "OPEN",
+          "hover:border-2 hover:border-green-400 hover:bg-green-50":
+            status === "CLOSED",
+          "hover:border-2 hover:border-yellow-400 hover:bg-yellow-50":
             status === "IN_PROGRESS",
         },
         className

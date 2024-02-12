@@ -49,7 +49,8 @@ module.exports = {
           },
         },
         // dark mode
-        "dark-tremor": {
+        // "dark-tremor": {
+        class: {
           brand: {
             faint: "#0B1229",
             muted: colors.blue[950],

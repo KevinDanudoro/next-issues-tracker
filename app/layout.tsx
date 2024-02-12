@@ -19,6 +19,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Issues Tracker",
   description: "Track any issue you create",
+  icons: "/favicon.ico",
 };
 
 export default function RootLayout({

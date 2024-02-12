@@ -10,7 +10,7 @@ export default {
     Credentials({
       id: "credentials",
       name: "Credentials",
-      async authorize(credentials, request) {
+      async authorize(credentials) {
         const validatedField = loginSchema.safeParse(credentials);
         if (!validatedField.success) return null;
 

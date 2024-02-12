@@ -1,37 +1,48 @@
 // import { auth } from "@/auth";
-import prisma from "@/prisma/client";
+import axios from "axios";
 import { auth } from "@/auth";
-import IssueBarChart from "./IssueBarChart";
+import { getAuthCookies } from "@/lib/cookies";
+import { issuesSumarizeSchema } from "@/schema/validationSchema";
+import IssueDonutChart from "./IssueDonutChart";
 import IssueCard from "./IssueCard";
 
 export default async function Home() {
   const session = await auth();
 
-  const issues = await prisma.issue.aggregate({
-    _count: {
-      _all: true,
-    },
-    where: {
-      status: "OPEN",
+  const issuesSumarize = await axios.get("/sumarize/issues", {
+    baseURL: "http://localhost:3000/api",
+    headers: {
+      Cookie: getAuthCookies(),
     },
   });
 
+  const validIssueSumarize = issuesSumarizeSchema.safeParse(
+    issuesSumarize.data
+  );
+  if (!validIssueSumarize.success) throw validIssueSumarize.error.message;
+
   return (
-    <div className="grid grid-cols-12 grid-rows-[repeat(8,5rem)] gap-4">
+    <div className="grid grid-cols-12 grid-rows-[repeat(8,4rem)] gap-4">
       {session?.user.role === "USER" ? (
         <>
-          <IssueCard className="col-span-4 row-span-2" status="OPEN">
-            <div className="flex justify-center items-center h-full">
-              {issues._count._all}
-            </div>
+          {validIssueSumarize.data.sumarize.map((issue) => (
+            <IssueCard
+              key={issue.name}
+              className="col-span-4 row-span-2"
+              status={issue.name}
+            >
+              <div className="flex justify-center items-center h-full">
+                {issue._count._all}
+              </div>
+            </IssueCard>
+          ))}
+
+          <IssueCard className="row-start-3 col-span-full row-span-4 px-6 flex items-center justify-between space-x-8">
+            <IssueDonutChart
+              className="h-full"
+              issues={validIssueSumarize.data}
+            />
           </IssueCard>
-          <IssueCard className="col-span-4 row-span-2" status="IN_PROGRESS">
-            <div className="flex justify-center items-center h-full">Issue</div>
-          </IssueCard>
-          <IssueCard className="col-span-4 row-span-2" status="CLOSED">
-            <div className="flex justify-center items-center h-full">Issue</div>
-          </IssueCard>
-          <IssueBarChart className="row-start-3 col-span-full row-span-4 p-4" />
         </>
       ) : (
         "aa"

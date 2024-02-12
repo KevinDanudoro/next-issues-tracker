@@ -19,6 +19,17 @@ export const editIssueSchema = z.object({
   status: z.enum(["OPEN", "IN_PROGRESS", "CLOSED"]),
 });
 
+export const issuesSumarizeSchema = z.object({
+  sumarize: z
+    .object({
+      _count: z.object({
+        _all: z.number(),
+      }),
+      name: z.enum(["OPEN", "IN_PROGRESS", "CLOSED"]),
+    })
+    .array(),
+});
+
 export const userSchema = z.object({
   email: z.string().min(1, "Email is required").email("Not valid email format"),
   username: z.string().min(1, "Username is required"),
