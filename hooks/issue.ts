@@ -1,15 +1,32 @@
-import { Createissue, EditIssue, ReadIssue } from "@/schema/inferedSchema";
-import { readIssueSchema } from "@/schema/validationSchema";
-import axios from "axios";
+import {
+  Createissue,
+  EditIssue,
+  ReadIssue,
+  SumarizedIssue,
+} from "@/schema/inferedSchema";
+import {
+  issuesSumarizeSchema,
+  readIssueSchema,
+} from "@/schema/validationSchema";
+import axios, { AxiosRequestConfig } from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
-export const useGetIssues = () => {
-  const { data, isLoading, isError } = useQuery(["issues"], async () => {
-    const response = await axios.get("/api/issues");
-    const validatedResponse = readIssueSchema.array().safeParse(response.data);
+export const useGetIssues = (
+  initialData?: ReadIssue[],
+  params?: AxiosRequestConfig["params"]
+) => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: params ? ["issues", params] : ["issues"],
+    queryFn: async () => {
+      const response = await axios.get("/api/issues", { params });
+      const validatedResponse = readIssueSchema
+        .array()
+        .safeParse(response.data);
 
-    if (!validatedResponse.success) throw validatedResponse.error.format();
-    return validatedResponse.data;
+      if (!validatedResponse.success) throw validatedResponse.error.format();
+      return validatedResponse.data;
+    },
+    initialData: initialData,
   });
 
   return { data, isLoading, isError };
@@ -25,6 +42,18 @@ export const useGetIssueById = (id: string) => {
 
   return { data };
 };
+
+export const useGetIssuesSumarize = (initialData?: SumarizedIssue) =>
+  useQuery({
+    queryKey: ["issues", "sumarize"],
+    queryFn: async () => {
+      const sumarize = await axios.get("/api/sumarize/issues");
+      const validatedSumarize = issuesSumarizeSchema.safeParse(sumarize.data);
+      if (!validatedSumarize.success) throw validatedSumarize.error.message;
+      return validatedSumarize.data;
+    },
+    initialData: initialData,
+  });
 
 export const useCreateIssueMutation = (
   onSuccess: () => void,

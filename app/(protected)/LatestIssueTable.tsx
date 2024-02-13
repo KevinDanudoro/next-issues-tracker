@@ -1,27 +1,22 @@
-import { getAuthCookies } from "@/lib/cookies";
-import { readIssueSchema } from "@/schema/validationSchema";
+"use client";
+
 import { Table } from "@radix-ui/themes";
-import axios from "axios";
 import React from "react";
 import type { FC } from "react";
 import StatusChip from "./issues/StatusChip";
+import { useGetIssues } from "@/hooks/issue";
+import { ReadIssue } from "@/schema/inferedSchema";
 
-interface LatestIssueTableProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface LatestIssueTableProps extends React.HTMLAttributes<HTMLDivElement> {
+  initialIssues: ReadIssue[];
+}
 
-const LatestIssueTable: FC<LatestIssueTableProps> = async ({
+const LatestIssueTable: FC<LatestIssueTableProps> = ({
   className,
+  initialIssues,
   ...props
 }) => {
-  const issues = await axios.get("/issues", {
-    baseURL: "http://localhost:3000/api",
-    params: { latest: 1 },
-    headers: {
-      Cookie: getAuthCookies(),
-    },
-  });
-
-  const validIssues = readIssueSchema.array().safeParse(issues.data);
-  if (!validIssues.success) throw validIssues.error.message;
+  const { data: issues } = useGetIssues(initialIssues, { latest: 1 });
 
   return (
     <Table.Root className={className} {...props}>
@@ -29,16 +24,18 @@ const LatestIssueTable: FC<LatestIssueTableProps> = async ({
         <Table.Row>
           <Table.ColumnHeaderCell>Title</Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell>Status</Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>Created At</Table.ColumnHeaderCell>
         </Table.Row>
       </Table.Header>
 
       <Table.Body>
-        {validIssues.data.map((issue) => (
+        {issues?.map((issue) => (
           <Table.Row key={issue.id}>
             <Table.RowHeaderCell>{issue.title}</Table.RowHeaderCell>
             <Table.Cell>
               <StatusChip status={issue.status} className="text-xs" />
             </Table.Cell>
+            <Table.Cell>{new Date(issue.createdAt).toDateString()}</Table.Cell>
           </Table.Row>
         ))}
       </Table.Body>
