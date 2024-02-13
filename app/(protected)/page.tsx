@@ -32,12 +32,19 @@ export default async function Home() {
           {validIssueSumarize.data.sumarize.map((issue) => (
             <IssueCard
               key={issue.name}
-              className="col-span-4 row-span-2 flex flex-col gap-y-2"
+              className="col-span-4 row-span-2 flex flex-col gap-y-2 md:flex-row md:gap-x-4 md:px-4"
             >
-              <IssueCardBadge status={issue.name} className="h-16 w-16 text-lg">
+              <IssueCardBadge
+                status={issue.name}
+                className="min-w-16 min-h-16 text-lg"
+              >
                 {issue._count._all}
               </IssueCardBadge>
-              <p className="capitalize text-sm">
+              <p className="capitalize text-sm w-fit text-center md:text-left">
+                <span className="font-semibold text-base md:text-lg block">
+                  Issues{" "}
+                </span>
+                {issue._count._all > 1 ? "are " : "is "}
                 {issue.name.toLowerCase().replaceAll("_", " ")}
               </p>
             </IssueCard>
@@ -51,7 +58,7 @@ export default async function Home() {
           </IssueCard>
 
           <IssueCard className="col-span-6 row-span-3 block pb-4 overflow-hidden">
-            <div className="px-6 border-b-2 border-gray-300 pt-4 pb-2">
+            <div className="px-6 border-b-2 border-gray-400 pt-4 pb-2">
               <h2 className="font-medium text-base">Latest Issues</h2>
             </div>
             <LatestIssueTable className="px-4 h-36 overflow-auto" />

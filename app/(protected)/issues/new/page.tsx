@@ -1,12 +1,12 @@
 "use client";
 
-import "easymde/dist/easymde.min.css";
 import type { FC } from "react";
 import React, { useTransition } from "react";
+import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
 import { Button, TextField } from "@radix-ui/themes";
 import { Controller, useForm } from "react-hook-form";
-import SimpleMDE from "react-simplemde-editor";
+
 import { useNotifContext } from "@/context/NotifContext";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createIssueSchema } from "@/schema/validationSchema";
@@ -14,6 +14,11 @@ import ErrorMessage from "@/components/ErrorMessage";
 import Spinner from "@/components/Spinner";
 import { Createissue } from "@/schema/inferedSchema";
 import { useCreateIssueMutation } from "@/hooks/issue";
+
+import "easymde/dist/easymde.min.css";
+const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
+  ssr: false,
+});
 
 const Page: FC = ({}) => {
   const { showNotif } = useNotifContext();

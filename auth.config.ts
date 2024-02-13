@@ -32,4 +32,5 @@ export default {
   pages: {
     signIn: "/login",
   },
+  trustHost: true,
 } satisfies NextAuthConfig;

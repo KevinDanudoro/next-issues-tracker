@@ -2,6 +2,7 @@
 
 import React, { useEffect, useTransition } from "react";
 import type { FC } from "react";
+import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
 import {
   Button,
@@ -14,8 +15,6 @@ import {
 } from "@radix-ui/themes";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import SimpleMDE from "react-simplemde-editor";
-import "easymde/dist/easymde.min.css";
 
 import ErrorMessage from "@/components/ErrorMessage";
 import Spinner from "@/components/Spinner";
@@ -24,6 +23,11 @@ import { EditIssue } from "@/schema/inferedSchema";
 import { useNotifContext } from "@/context/NotifContext";
 import { useEditIssueMutation, useGetIssueById } from "@/hooks/issue";
 import { z } from "zod";
+
+import "easymde/dist/easymde.min.css";
+const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
+  ssr: false,
+});
 
 interface PageProps {
   params: { id: string };
