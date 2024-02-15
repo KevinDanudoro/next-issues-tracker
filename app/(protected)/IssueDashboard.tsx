@@ -27,7 +27,7 @@ const IssueDashboard: React.FC<IssueDashboardProps> = async ({}) => {
   if (!validIssues.success) throw validIssues.error.message;
 
   return (
-    <>
+    <div className="grid grid-cols-12 grid-rows-[auto_repeat(6,4rem)] gap-4">
       <h1 className="col-span-full row-start-1 text-2xl font-semibold">
         Issue Dashboard
       </h1>
@@ -45,11 +45,11 @@ const IssueDashboard: React.FC<IssueDashboardProps> = async ({}) => {
           <h2 className="font-medium text-base">Latest Issues</h2>
         </div>
         <LatestIssueTable
-          className="px-4 h-36 overflow-auto md:h-56"
+          className="px-4 h-auto overflow-auto md:h-56"
           initialIssues={validIssues.data}
         />
       </Card>
-    </>
+    </div>
   );
 };
 

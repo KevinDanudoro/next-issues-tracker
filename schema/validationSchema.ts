@@ -30,11 +30,37 @@ export const issuesSumarizeSchema = z.object({
     .array(),
 });
 
-export const userSchema = z.object({
+export const createUserSchema = z.object({
   email: z.string().min(1, "Email is required").email("Not valid email format"),
   username: z.string().min(1, "Username is required"),
   password: z.string().min(8, "Password must be at least 8 character"),
   role: z.enum(["USER", "ADMIN"]).nullish(),
+});
+
+export const readUserSchema = z.object({
+  email: z.string().min(1, "Email is required").email("Not valid email format"),
+  username: z.string().min(1, "Username is required"),
+  password: z.string().min(8, "Password must be at least 8 character"),
+  role: z.enum(["USER", "ADMIN"]),
+});
+
+export const growthUserSchema = z.object({
+  growths: z
+    .object({
+      date: z.string(),
+      growth: z
+        .object({
+          email: z
+            .string()
+            .min(1, "Email is required")
+            .email("Not valid email format"),
+          username: z.string().min(1, "Username is required"),
+          password: z.string().min(8, "Password must be at least 8 character"),
+          role: z.enum(["USER", "ADMIN"]),
+        })
+        .array(),
+    })
+    .array(),
 });
 
 export const userSumarizeShema = z.object({

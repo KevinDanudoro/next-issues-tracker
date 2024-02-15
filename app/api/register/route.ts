@@ -1,12 +1,12 @@
 import prisma from "@/prisma/client";
-import { userSchema } from "@/schema/validationSchema";
+import { readUserSchema } from "@/schema/validationSchema";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { getUserByEmail } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const validUser = userSchema.safeParse(body);
+  const validUser = readUserSchema.safeParse(body);
 
   if (!validUser.success) {
     return NextResponse.json(validUser.error.format(), { status: 400 });

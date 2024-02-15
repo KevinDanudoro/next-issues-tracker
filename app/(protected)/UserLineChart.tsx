@@ -1,89 +1,40 @@
 "use client";
 
+import { GrowthUserSchema } from "@/schema/inferedSchema";
 import { LineChart } from "@tremor/react";
 import React from "react";
 
-const chartdata = [
-  {
-    date: "Jan 22",
-    SemiAnalysis: 2890,
-    "The Pragmatic Engineer": 2338,
-  },
-  {
-    date: "Feb 22",
-    SemiAnalysis: 2756,
-    "The Pragmatic Engineer": 2103,
-  },
-  {
-    date: "Mar 22",
-    SemiAnalysis: 3322,
-    "The Pragmatic Engineer": 2194,
-  },
-  {
-    date: "Apr 22",
-    SemiAnalysis: 3470,
-    "The Pragmatic Engineer": 2108,
-  },
-  {
-    date: "May 22",
-    SemiAnalysis: 3475,
-    "The Pragmatic Engineer": 1812,
-  },
-  {
-    date: "Jun 22",
-    SemiAnalysis: 3129,
-    "The Pragmatic Engineer": 1726,
-  },
-  {
-    date: "Jul 22",
-    SemiAnalysis: 3490,
-    "The Pragmatic Engineer": 1982,
-  },
-  {
-    date: "Aug 22",
-    SemiAnalysis: 2903,
-    "The Pragmatic Engineer": 2012,
-  },
-  {
-    date: "Sep 22",
-    SemiAnalysis: 2643,
-    "The Pragmatic Engineer": 2342,
-  },
-  {
-    date: "Oct 22",
-    SemiAnalysis: 2837,
-    "The Pragmatic Engineer": 2473,
-  },
-  {
-    date: "Nov 22",
-    SemiAnalysis: 2954,
-    "The Pragmatic Engineer": 3848,
-  },
-  {
-    date: "Dec 22",
-    SemiAnalysis: 3239,
-    "The Pragmatic Engineer": 3736,
-  },
-];
-
 const dataFormatter = (number: number) =>
-  `$${Intl.NumberFormat("us").format(number).toString()}`;
+  `${Intl.NumberFormat("us").format(number).toString()} user`;
 
-interface UserLineChartProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface UserLineChartProps extends React.HTMLAttributes<HTMLDivElement> {
+  initialUsers: GrowthUserSchema;
+}
 
 const UserLineChart: React.FC<UserLineChartProps> = ({
   className,
+  initialUsers,
   ...props
 }) => {
+  const chartData = initialUsers.growths.map((data) => {
+    const date = new Date(data.date).toDateString().split(" ");
+    if (!data.growth) return { date: `${date[1]} ${date[3]}`, user: 0 };
+    return {
+      date: `${date[1]} ${date[3]}`,
+      user: data.growth.length,
+    };
+  });
   return (
     <LineChart
       className={className}
-      data={chartdata}
+      data={chartData ?? []}
       index="date"
-      categories={["SemiAnalysis", "The Pragmatic Engineer"]}
-      colors={["indigo", "rose"]}
+      categories={["user"]}
+      colors={["indigo"]}
       valueFormatter={dataFormatter}
-      yAxisWidth={60}
+      minValue={0}
+      allowDecimals={false}
+      showAnimation={true}
       {...props}
     />
   );
