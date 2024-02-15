@@ -1,4 +1,3 @@
-import { useSession } from "next-auth/react";
 import React from "react";
 import type { FC } from "react";
 import { logout } from "@/lib/action";
@@ -12,12 +11,13 @@ import {
 } from "@radix-ui/themes";
 import { FaRegUser } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
+import { auth } from "@/auth";
 
 interface AvatarMenuProps {}
 
-const AvatarMenu: FC<AvatarMenuProps> = ({}) => {
-  const session = useSession();
-  const inisial = session.data?.user.name?.charAt(0);
+const AvatarMenu: FC<AvatarMenuProps> = async ({}) => {
+  const session = await auth();
+  const inisial = session?.user.name?.charAt(0);
   return (
     <DropdownMenuRoot>
       <DropdownMenuTrigger>

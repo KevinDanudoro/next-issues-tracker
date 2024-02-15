@@ -2,11 +2,11 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import type { FC, PropsWithChildren } from "react";
 
-interface IssueCardProps
+interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
     PropsWithChildren {}
 
-const IssueCard: FC<IssueCardProps> = ({ children, className, ...props }) => {
+const Card: FC<CardProps> = ({ children, className, ...props }) => {
   return (
     <div
       className={cn(
@@ -20,4 +20,4 @@ const IssueCard: FC<IssueCardProps> = ({ children, className, ...props }) => {
   );
 };
 
-export default IssueCard;
+export default Card;

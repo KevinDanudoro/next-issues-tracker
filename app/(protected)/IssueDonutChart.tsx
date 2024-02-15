@@ -28,15 +28,15 @@ const IssueDonutChart: FC<IssueDonutChartProps> = ({
   }));
 
   return (
-    <>
+    <div className={className}>
       <DonutChart
         data={totalIssues ?? []}
         category="Total issues"
         index="name"
         valueFormatter={valueFormatter}
         colors={["red-400", "yellow-400", "green-400"]}
-        className={className}
         showAnimation={true}
+        className="h-full"
         {...props}
       />
       <Legend
@@ -44,7 +44,7 @@ const IssueDonutChart: FC<IssueDonutChartProps> = ({
         categories={totalIssues?.map((issue) => `${issue.name} issue`) ?? [""]}
         colors={["red-400", "yellow-400", "green-400"]}
       />
-    </>
+    </div>
   );
 };
 

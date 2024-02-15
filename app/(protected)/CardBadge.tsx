@@ -4,14 +4,14 @@ import React from "react";
 import type { FC, PropsWithChildren } from "react";
 import { z } from "zod";
 
-interface IssueCardBadgeProps
+interface CardBadgeProps
   extends PropsWithChildren,
     React.HTMLAttributes<HTMLDivElement> {
-  status?: z.infer<typeof readIssueSchema.shape.status>;
+  color?: "red" | "yellow" | "green";
 }
 
-const IssueCardBadge: FC<IssueCardBadgeProps> = ({
-  status,
+const CardBadge: FC<CardBadgeProps> = ({
+  color,
   children,
   className,
   ...props
@@ -22,9 +22,9 @@ const IssueCardBadge: FC<IssueCardBadgeProps> = ({
         {
           "w-12 h-12 rounded-full border-4 flex justify-center items-center":
             true,
-          "border-red-400 bg-red-50": status === "OPEN",
-          "border-yellow-400 bg-yellow-50": status === "IN_PROGRESS",
-          "border-green-400 bg-green-50": status === "CLOSED",
+          "border-red-400 bg-red-50": color === "red",
+          "border-yellow-400 bg-yellow-50": color === "yellow",
+          "border-green-400 bg-green-50": color === "green",
         },
         className
       )}
@@ -35,4 +35,4 @@ const IssueCardBadge: FC<IssueCardBadgeProps> = ({
   );
 };
 
-export default IssueCardBadge;
+export default CardBadge;

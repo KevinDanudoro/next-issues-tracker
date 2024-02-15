@@ -32,7 +32,7 @@ const Page: FC<PageProps> = ({}) => {
   const onSubmit = handleSubmit(async (data: RegisterForm) => {
     const { email, username, password } = data;
     try {
-      const req = await axios.post("/register", {
+      const req = await axios.post("/api/register", {
         email,
         username,
         password,
