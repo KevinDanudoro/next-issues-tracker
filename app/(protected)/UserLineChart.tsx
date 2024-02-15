@@ -1,8 +1,9 @@
 "use client";
 
+import { useGetUsersGrowth } from "@/hooks/user";
 import { GrowthUserSchema } from "@/schema/inferedSchema";
 import { LineChart } from "@tremor/react";
-import React from "react";
+import React, { useMemo } from "react";
 
 const dataFormatter = (number: number) =>
   `${Intl.NumberFormat("us").format(number).toString()} user`;
@@ -16,14 +17,19 @@ const UserLineChart: React.FC<UserLineChartProps> = ({
   initialUsers,
   ...props
 }) => {
-  const chartData = initialUsers.growths.map((data) => {
-    const date = new Date(data.date).toDateString().split(" ");
-    if (!data.growth) return { date: `${date[1]} ${date[3]}`, user: 0 };
-    return {
-      date: `${date[1]} ${date[3]}`,
-      user: data.growth.length,
-    };
-  });
+  const { data: usersGrowths } = useGetUsersGrowth(initialUsers);
+
+  const chartData = useMemo(() => {
+    return usersGrowths?.growths.map((data) => {
+      const date = new Date(data.date).toDateString().split(" ");
+      if (!data.growth) return { date: `${date[1]} ${date[3]}`, user: 0 };
+      return {
+        date: `${date[1]} ${date[3]}`,
+        user: data.growth.length,
+      };
+    });
+  }, [usersGrowths]);
+
   return (
     <LineChart
       className={className}

@@ -7,6 +7,7 @@ import {
   createUserSchema,
   readUserSchema,
   growthUserSchema,
+  userSumarizeShema,
 } from "./validationSchema";
 
 export type Createissue = z.infer<typeof createIssueSchema>;
@@ -17,3 +18,4 @@ export type SumarizedIssue = z.infer<typeof issuesSumarizeSchema>;
 export type CreateUserSchema = z.infer<typeof createUserSchema>;
 export type ReadUserSchema = z.infer<typeof readUserSchema>;
 export type GrowthUserSchema = z.infer<typeof growthUserSchema>;
+export type SumarizedUserSchema = z.infer<typeof userSumarizeShema>;
