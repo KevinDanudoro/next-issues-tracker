@@ -37,6 +37,17 @@ export const userSchema = z.object({
   role: z.enum(["USER", "ADMIN"]).nullish(),
 });
 
+export const userSumarizeShema = z.object({
+  sumarize: z
+    .object({
+      _count: z.object({
+        _all: z.number(),
+      }),
+      name: z.enum(["USER", "ADMIN"]),
+    })
+    .array(),
+});
+
 export const loginSchema = z.object({
   email: z.string().min(1, "Email is required").email("Not valid email format"),
   password: z.string().min(8, "Password must be at least 8 character"),

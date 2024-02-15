@@ -1,24 +1,21 @@
-import { Card } from "@radix-ui/themes";
 import IssueSumarize from "./IssueSumarize";
 import IssueDonutChart from "./IssueDonutChart";
-import { getAuthCookies } from "@/lib/cookies";
 import axios from "axios";
 import {
   issuesSumarizeSchema,
   readIssueSchema,
 } from "@/schema/validationSchema";
 import LatestIssueTable from "./LatestIssueTable";
+import axiosServer from "@/lib/axios-server";
+import React from "react";
+import Card from "./Card";
 
-const IssueDashboard = async () => {
-  const endpoints = ["/issues?latest=1", "/sumarize/issues"];
-  const config = {
-    baseURL: "http://localhost:3000/api",
-    headers: {
-      Cookie: getAuthCookies(),
-    },
-  };
+interface IssueDashboardProps {}
+
+const IssueDashboard: React.FC<IssueDashboardProps> = async ({}) => {
+  const endpoints = ["/issues?latest=1", "/issues/sumarize"];
   const [issues, issuesSumarize] = await axios.all(
-    endpoints.map((endpoint) => axios.get(endpoint, config))
+    endpoints.map((endpoint) => axiosServer.get(endpoint))
   );
 
   const validIssueSumarize = issuesSumarizeSchema.safeParse(

@@ -47,7 +47,7 @@ export const useGetIssuesSumarize = (initialData?: SumarizedIssue) =>
   useQuery({
     queryKey: ["issues", "sumarize"],
     queryFn: async () => {
-      const sumarize = await axios.get("/api/sumarize/issues");
+      const sumarize = await axios.get("/api/issues/sumarize");
       const validatedSumarize = issuesSumarizeSchema.safeParse(sumarize.data);
       if (!validatedSumarize.success) throw validatedSumarize.error.message;
       return validatedSumarize.data;
