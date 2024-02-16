@@ -36,14 +36,14 @@ const IssueDashboard: React.FC<IssueDashboardProps> = async ({}) => {
       </h1>
       <IssueSumarize initialIssues={validIssueSumarize.data} />
 
-      <Card className="col-span-full row-span-3 p-6 sm:col-span-6 md:row-span-4">
+      <Card className="col-span-full row-span-4 p-6 sm:col-span-6">
         <IssueDonutChart
-          className="h-full flex flex-col items-center justify-between lg:flex-row lg:justify-center"
+          className="h-56 md:h-50 flex flex-col items-center justify-between lg:flex-row lg:justify-center"
           initialIssues={validIssueSumarize.data}
         />
       </Card>
 
-      <Card className="col-span-full row-span-3 block pb-4 overflow-hidden sm:col-span-6 md:row-span-4">
+      <Card className="col-span-full row-span-4 block pb-4 overflow-hidden sm:col-span-6">
         <div className="px-6 border-b-2 border-gray-400 pt-4 pb-2">
           <h2 className="font-medium text-base">Latest Issues</h2>
         </div>

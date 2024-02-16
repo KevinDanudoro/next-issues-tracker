@@ -77,6 +77,7 @@ export const useCreateIssueMutation = (
         const newIssues = currentIssues.concat(data);
         return newIssues;
       });
+      queryClient.invalidateQueries(["issues"]);
       onSuccess();
     },
     onError: onError,
@@ -114,6 +115,7 @@ export const useEditIssueMutation = (
           ) ?? []
         );
       });
+      queryClient.invalidateQueries(["issues"]);
     },
     onError: onError,
   });
@@ -140,6 +142,7 @@ export const useDeleteIssueMutation = (
       queryClient.setQueryData(["issues"], (issues?: ReadIssue[]) => {
         return issues?.filter((issue) => issue.id !== id) ?? [];
       });
+      queryClient.invalidateQueries(["issues"]);
     },
     onError: onError,
   });

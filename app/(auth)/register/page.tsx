@@ -24,7 +24,7 @@ const Page: FC<PageProps> = ({}) => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isLoading },
   } = useForm<RegisterForm>({
     resolver: zodResolver(registerSchema),
   });
@@ -99,7 +99,11 @@ const Page: FC<PageProps> = ({}) => {
           <ErrorMessage>{errors.confirmPassword?.message}</ErrorMessage>
         </div>
 
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={isSubmitting || isLoading}
+        >
           Register
         </Button>
 

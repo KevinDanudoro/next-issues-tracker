@@ -40,7 +40,7 @@ const IssueDonutChart: FC<IssueDonutChartProps> = ({
         {...props}
       />
       <Legend
-        className="max-w-xs capitalize"
+        className="capitalize max-w-sm overflow-visible"
         categories={totalIssues?.map((issue) => `${issue.name} issue`) ?? [""]}
         colors={["red-400", "yellow-400", "green-400"]}
       />
