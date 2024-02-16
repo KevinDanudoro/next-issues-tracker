@@ -1,4 +1,7 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const dotenvExpand = require("dotenv-expand");
 
-module.exports = nextConfig
+dotenvExpand.expand({ parsed: { ...process.env } });
+const nextConfig = {};
+
+module.exports = nextConfig;
