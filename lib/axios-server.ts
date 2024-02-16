@@ -2,7 +2,7 @@ import axios from "axios";
 
 const axiosServer = (cookies: string) =>
   axios.create({
-    baseURL: process.env.APP_URL + "/api",
+    baseURL: process.env.NEXT_PUBLIC_URL + "/api",
     headers: {
       Cookie: cookies,
     },
