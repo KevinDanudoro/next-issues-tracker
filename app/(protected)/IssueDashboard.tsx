@@ -9,13 +9,16 @@ import LatestIssueTable from "./LatestIssueTable";
 import axiosServer from "@/lib/axios-server";
 import React from "react";
 import Card from "./Card";
+import { getAuthCookies } from "@/lib/cookies";
 
 interface IssueDashboardProps {}
 
 const IssueDashboard: React.FC<IssueDashboardProps> = async ({}) => {
   const endpoints = ["/issues?latest=1", "/issues/sumarize"];
+  const axiosInstance = axiosServer(getAuthCookies());
+
   const [issues, issuesSumarize] = await axios.all(
-    endpoints.map((endpoint) => axiosServer.get(endpoint))
+    endpoints.map((endpoint) => axiosInstance.get(endpoint))
   );
 
   const validIssueSumarize = issuesSumarizeSchema.safeParse(

@@ -6,13 +6,16 @@ import { growthUserSchema, userSumarizeShema } from "@/schema/validationSchema";
 import UserLineChart from "./UserLineChart";
 import axios from "axios";
 import UserSumarize from "./UserSumarize";
+import { getAuthCookies } from "@/lib/cookies";
 
 interface UserDashboardProps {}
 
 const UserDashboard: FC<UserDashboardProps> = async ({}) => {
   const endpoints = ["/users/growth", "/users/sumarize"];
+  const axiosInstance = axiosServer(getAuthCookies());
+
   const [usersGrowth, usersSumarize] = await axios.all(
-    endpoints.map((e) => axiosServer.get(e))
+    endpoints.map((e) => axiosInstance.get(e))
   );
 
   const validUsersSumarize = userSumarizeShema.safeParse(usersSumarize.data);
