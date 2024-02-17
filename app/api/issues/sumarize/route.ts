@@ -39,5 +39,10 @@ export async function GET(req: NextRequest) {
     ],
   };
 
-  return NextResponse.json(sumarizeIssues, { status: 200 });
+  return NextResponse.json(sumarizeIssues, {
+    status: 200,
+    headers: {
+      "Cache-Control": "s-maxage=0, no-cache, no-store, must-revalidate",
+    },
+  });
 }

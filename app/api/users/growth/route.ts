@@ -31,5 +31,13 @@ export async function GET(req: NextRequest) {
     i++;
   }
 
-  return NextResponse.json({ growths: growths }, { status: 200 });
+  return NextResponse.json(
+    { growths: growths },
+    {
+      status: 200,
+      headers: {
+        "Cache-Control": "s-maxage=0, no-cache, no-store, must-revalidate",
+      },
+    }
+  );
 }

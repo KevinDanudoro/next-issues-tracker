@@ -27,6 +27,11 @@ export async function GET(req: NextRequest) {
         { name: "USER", ...user },
       ],
     },
-    { status: 200 }
+    {
+      status: 200,
+      headers: {
+        "Cache-Control": "s-maxage=0, no-cache, no-store, must-revalidate",
+      },
+    }
   );
 }
