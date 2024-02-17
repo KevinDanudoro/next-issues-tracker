@@ -77,6 +77,7 @@ export const useCreateIssueMutation = (
         const newIssues = currentIssues.concat(data);
         return newIssues;
       });
+      queryClient.invalidateQueries(["issues", "sumarize"]);
       onSuccess();
     },
     onError: onError,
@@ -114,6 +115,7 @@ export const useEditIssueMutation = (
           ) ?? []
         );
       });
+      queryClient.invalidateQueries(["issues", "sumarize"]);
     },
     onError: onError,
   });
@@ -141,6 +143,7 @@ export const useDeleteIssueMutation = (
         return issues?.filter((issue) => issue.id !== id) ?? [];
       });
       queryClient.invalidateQueries(["issues"], { exact: true });
+      queryClient.invalidateQueries(["issues", "sumarize"]);
     },
     onError: onError,
   });
@@ -165,6 +168,7 @@ export const useDeleteManyIssuesMutation = (
     onSuccess: () => {
       onSuccess();
       queryClient.invalidateQueries(["issues"], { exact: true });
+      queryClient.invalidateQueries(["issues", "sumarize"]);
     },
     onError: onError,
   });

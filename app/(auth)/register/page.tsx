@@ -20,7 +20,7 @@ type RegisterForm = z.infer<typeof registerSchema>;
 
 const Page: FC<PageProps> = ({}) => {
   const { showNotif } = useNotifContext();
-  const [, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
   const {
     register,
     handleSubmit,
@@ -102,7 +102,7 @@ const Page: FC<PageProps> = ({}) => {
         <Button
           type="submit"
           className="w-full"
-          disabled={isSubmitting || isLoading}
+          disabled={isSubmitting || isLoading || isPending}
         >
           Register
         </Button>

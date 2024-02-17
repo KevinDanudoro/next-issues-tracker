@@ -47,7 +47,11 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(latestIssues, { status: 200 });
   }
 
-  const issues = await prisma.issue.findMany();
+  const issues = await prisma.issue.findMany({
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
   return NextResponse.json(issues, { status: 200 });
 }
 

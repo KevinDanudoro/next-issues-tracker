@@ -71,7 +71,7 @@ const Page: FC<PageProps> = ({}) => {
         <Button
           type="submit"
           className="w-full"
-          disabled={isSubmitting || isLoading}
+          disabled={isSubmitting || isLoading || isPending}
         >
           Login
         </Button>
