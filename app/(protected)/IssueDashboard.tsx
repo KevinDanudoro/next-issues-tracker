@@ -14,7 +14,7 @@ import { getAuthCookies } from "@/lib/cookies";
 interface IssueDashboardProps {}
 
 const IssueDashboard: React.FC<IssueDashboardProps> = async ({}) => {
-  const endpoints = ["/issues?latest=1", "/issues/sumarize"];
+  const endpoints = ["/issues?latest=true", "/issues?sumarize=true"];
   const axiosInstance = axiosServer(getAuthCookies());
 
   const [issues, issuesSumarize] = await axios.all(

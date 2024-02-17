@@ -1,9 +1,32 @@
 import prisma from "@/prisma/client";
-import { issuesSumarizeSchema } from "@/schema/validationSchema";
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 
-export async function GET(req: NextRequest) {
+export const getManyUsers = async () => {
+  return await prisma.issue.findMany({
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
+};
+
+export const getIssueById = async (id: number) => {
+  const issue = await prisma.issue.findUnique({
+    where: {
+      id: id,
+    },
+  });
+  return issue;
+};
+
+export const getLatestIssues = async () => {
+  return await prisma.issue.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 5,
+  });
+};
+
+export const getIssuesSumarize = async () => {
   const openIssues = await prisma.issue.aggregate({
     _count: {
       _all: true,
@@ -31,7 +54,7 @@ export async function GET(req: NextRequest) {
     },
   });
 
-  const sumarizeIssues: z.infer<typeof issuesSumarizeSchema> = {
+  const sumarizeIssues = {
     sumarize: [
       { name: "OPEN", ...openIssues },
       { name: "IN_PROGRESS", ...inProgressIssues },
@@ -39,10 +62,5 @@ export async function GET(req: NextRequest) {
     ],
   };
 
-  return NextResponse.json(sumarizeIssues, {
-    status: 200,
-    headers: {
-      "Cache-Control": "s-maxage=0, no-cache, no-store, must-revalidate",
-    },
-  });
-}
+  return sumarizeIssues;
+};

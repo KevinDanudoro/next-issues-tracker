@@ -7,7 +7,9 @@ export const useGetUsersGrowth = (initialData?: GrowthUserSchema) => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
-      const response = await axios.get("/api/users/growth");
+      const response = await axios.get("/api/users", {
+        params: { growth: true },
+      });
       const validatedResponse = growthUserSchema.safeParse(response.data);
 
       if (!validatedResponse.success) throw validatedResponse.error.format();
@@ -23,7 +25,9 @@ export const useGetUserSumarize = (initialData?: SumarizedUserSchema) => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["users", "sumarize"],
     queryFn: async () => {
-      const response = await axios.get("/api/users/sumarize");
+      const response = await axios.get("/api/users", {
+        params: { sumarize: true },
+      });
       const validatedResponse = userSumarizeShema.safeParse(response.data);
 
       if (!validatedResponse.success) throw validatedResponse.error.format();

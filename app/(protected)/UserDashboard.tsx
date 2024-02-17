@@ -11,7 +11,7 @@ import { getAuthCookies } from "@/lib/cookies";
 interface UserDashboardProps {}
 
 const UserDashboard: FC<UserDashboardProps> = async ({}) => {
-  const endpoints = ["/users/growth", "/users/sumarize"];
+  const endpoints = ["/users?growth=true", "/users?sumarize=true"];
   const axiosInstance = axiosServer(getAuthCookies());
 
   const [usersGrowth, usersSumarize] = await axios.all(

@@ -2,6 +2,12 @@ import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { createIssueSchema, editIssueSchema } from "@/schema/validationSchema";
 import { z } from "zod";
+import {
+  getIssueById,
+  getIssuesSumarize,
+  getLatestIssues,
+  getManyUsers,
+} from "./issue";
 
 export const revalidate = 0;
 
@@ -26,33 +32,23 @@ export async function GET(req: NextRequest) {
 
   const id = searchParams.get("id");
   const validatedId = z.coerce.number().safeParse(id);
-
-  if (validatedId.success && id != null) {
-    const issues = await prisma.issue.findUnique({
-      where: {
-        id: validatedId.data,
-      },
-    });
-    return NextResponse.json(issues, { status: 200 });
-  }
+  const isValidId = validatedId.success && id !== null;
 
   const isLatest = !!searchParams.get("latest");
-  if (isLatest) {
-    const latestIssues = await prisma.issue.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-      take: 5,
-    });
-    return NextResponse.json(latestIssues, { status: 200 });
-  }
+  const isSumarize = !!searchParams.get("sumarize");
 
-  const issues = await prisma.issue.findMany({
-    orderBy: {
-      createdAt: "asc",
-    },
-  });
-  return NextResponse.json(issues, { status: 200 });
+  if (isValidId)
+    return NextResponse.json(await getIssueById(validatedId.data), {
+      status: 200,
+    });
+
+  if (isLatest)
+    return NextResponse.json(await getLatestIssues(), { status: 200 });
+
+  if (isSumarize)
+    return NextResponse.json(await getIssuesSumarize(), { status: 200 });
+
+  return NextResponse.json(await getManyUsers(), { status: 200 });
 }
 
 export async function PUT(req: NextRequest) {

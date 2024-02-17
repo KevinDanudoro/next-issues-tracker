@@ -1,8 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/prisma/client";
+import { getManyUsers, getUsersGrowth, getUsersSumarize } from "./user";
 
 export async function GET(req: NextRequest) {
-  const users = await prisma.user.findMany();
+  const { searchParams } = new URL(req.url);
 
-  return NextResponse.json(users, { status: 200 });
+  const isSumarize = !!searchParams.get("sumarize");
+  const isGrowth = !!searchParams.get("growth");
+
+  if (isSumarize)
+    return NextResponse.json(await getUsersSumarize(), { status: 200 });
+  if (isGrowth)
+    return NextResponse.json(await getUsersGrowth(), { status: 200 });
+
+  return NextResponse.json(await getManyUsers(), { status: 200 });
 }
