@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createIssueSchema, editIssueSchema } from "@/schema/validationSchema";
 import { z } from "zod";
 
+export const revalidate = 0;
+
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const validation = createIssueSchema.safeParse(body);
