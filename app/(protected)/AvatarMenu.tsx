@@ -9,7 +9,6 @@ import {
   DropdownMenuContent,
   DropdownMenuSeparator,
 } from "@radix-ui/themes";
-import { FaRegUser } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import { auth } from "@/auth";
 
@@ -26,9 +25,6 @@ const AvatarMenu: FC<AvatarMenuProps> = async ({}) => {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem className="space-x-10">
-          <p>Profile</p> <FaRegUser />
-        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <form action={logout}>
           <button type="submit">
