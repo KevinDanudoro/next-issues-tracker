@@ -2,8 +2,6 @@ import { auth } from "@/auth";
 import IssueDashboard from "./IssueDashboard";
 import UserDashboard from "./UserDashboard";
 
-export const revalidate = 0;
-
 export default async function Home() {
   const session = await auth();
   return (
